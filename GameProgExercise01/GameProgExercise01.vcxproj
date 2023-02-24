@@ -210,6 +210,7 @@
     <ClCompile Include="DX\DeviceResources.cpp" />
     <ClCompile Include="DX\View.cpp" />
     <ClCompile Include="GameProgExercise01.cpp" />
+    <ClCompile Include="Scene\Camera.cpp" />
     <ClCompile Include="Scene\Flower.cpp" />
     <ClCompile Include="Scene\Ground.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="DX\DeviceResources.h" />
     <ClInclude Include="DX\View.h" />
     <ClInclude Include="GameProgExercise01.h" />
+    <ClInclude Include="Scene\Camera.h" />
     <ClInclude Include="Scene\Flower.h" />
     <ClInclude Include="Scene\Ground.h" />
     <ClInclude Include="Scene\Scene.h" />
