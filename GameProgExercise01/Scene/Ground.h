@@ -4,7 +4,7 @@
 class Ground  final : public DX::IDeviceNotify
 {
 public:
-    static const UINT NumVertices = 6;
+    static const UINT NumVertices = 9;
 
     void Render();
     void SetupTriangle();
