@@ -1,6 +1,6 @@
 #pragma once
 
-#pragma warning( disable : 4100 )
+#pragma warning( disable : 4100  4273 )
 
 #include <WinSDKVer.h>
 //#define _WIN32_WINNT 0x0602 // Ensure we are using XAudio 2.8!
@@ -70,6 +70,16 @@
 
 #include "Keyboard.h"
 #include <vector>
+
+_Check_return_ _CRT_JIT_INTRINSIC inline double fabs(_In_ double _Xx)
+{
+	if (_Xx < 0.0)
+	{
+		_Xx = -_Xx;
+	}
+
+	return _Xx;
+}
 
 /*namespace DX
 {

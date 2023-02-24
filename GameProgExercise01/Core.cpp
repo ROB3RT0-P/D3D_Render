@@ -2,6 +2,10 @@
 #include "Core.h"
 #include "Scene\Scene.h"
 
+#include "DX\View.h"
+
+using namespace DirectX;
+
 static Core* g_core = nullptr;
 
 Core* Core::Get()
@@ -9,15 +13,18 @@ Core* Core::Get()
 	return g_core;
 }
 
-Core::Core() noexcept( false ) : 
-	m_deviceResources( nullptr ),
-	m_scene( nullptr )
+Core::Core() noexcept(false) :
+	m_deviceResources(nullptr),
+	m_view(nullptr),
+	m_scene(nullptr)
 {
 	// DirectX Tool Kit supports all feature levels
 	m_deviceResources = new DX::DeviceResources(
 		DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D24_UNORM_S8_UINT, 2,
-		D3D_FEATURE_LEVEL_9_1 );
-	m_deviceResources->RegisterDeviceNotify( this );
+		D3D_FEATURE_LEVEL_9_1);
+	m_deviceResources->RegisterDeviceNotify(this);
+
+	m_view = new DX::View(m_deviceResources);
 
 	ASSERT(g_core == nullptr, "A core object already exists.\n");
 	g_core = this;
@@ -25,20 +32,23 @@ Core::Core() noexcept( false ) :
 
 Core::~Core()
 {
+	delete m_view;
 	delete m_deviceResources;
 	g_core = nullptr;
 }
 
 // Perform any one-time initialisation
-void Core::Initialise( HWND window, int width, int height )
+void Core::Initialise(HWND window, int width, int height)
 {
-	m_deviceResources->SetWindow( window, width, height );
+	m_deviceResources->SetWindow(window, width, height);
 
 	m_deviceResources->CreateDeviceResources();
 	CreateDeviceDependentResources();
 
 	m_deviceResources->CreateWindowSizeDependentResources();
 	CreateWindowSizeDependentResources();
+
+	m_view->Initialise();
 
 	m_scene = new Scene();
 	m_scene->Initialise();
@@ -47,10 +57,16 @@ void Core::Initialise( HWND window, int width, int height )
 // Clear up and perform any closing actions
 void Core::Shutdown()
 {
+	if (m_view != nullptr)
+	{
+		m_view->Shutdown();
+	}
+
 	if (m_scene != nullptr)
 	{
 		m_scene->Shutdown();
 	}
+
 	delete m_scene;
 	m_scene = nullptr;
 }
@@ -67,6 +83,9 @@ void Core::Update()
 void Core::Render()
 {
 	Clear();
+
+	if (m_view != nullptr)
+		m_view->Refresh();
 
 	// Draw the scene
 	if( m_scene != nullptr )

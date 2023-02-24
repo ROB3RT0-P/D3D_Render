@@ -205,9 +205,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="DX\DeviceResources.cpp" />
+    <ClCompile Include="DX\View.cpp" />
     <ClCompile Include="GameProgExercise01.cpp" />
+    <ClCompile Include="Scene\Flower.cpp" />
     <ClCompile Include="Scene\Ground.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Utils\File.cpp" />
@@ -223,11 +226,14 @@
     <ClCompile Include="Utils\Timers.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Containers\List.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DX\DeviceResources.h" />
+    <ClInclude Include="DX\View.h" />
     <ClInclude Include="GameProgExercise01.h" />
+    <ClInclude Include="Scene\Flower.h" />
     <ClInclude Include="Scene\Ground.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Utils\File.h" />
