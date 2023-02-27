@@ -1,20 +1,35 @@
 #pragma once
 
+namespace scene
+{
+class Camera;
+
+class TestObject;
 class Ground;
 
+// Object containing all the entities and related objects in the scene
 class Scene
 {
 public:
 	Scene();
+	~Scene();
 
-	void			Initialise();
-	void			Shutdown();
+	void				Initialise();
+	void				Shutdown();
 
-	void			Update();
-	void			Render();
+	void				Update();
+	void				Render();
+
+	inline Camera*		GetCamera() const
+	{
+		return m_camera;
+	}
 
 private:
-	Ground*			m_ground;
-
-	ID3D11Buffer* m_constantBuffer;
+	TestObject*			m_testObject1;
+	TestObject*			m_testObject2;
+	Ground*				m_ground;
+	Camera*				m_camera;
 };
+
+} // namespace scene

@@ -1,32 +1,28 @@
 #include "GameProgExercise01.h"
 #include "Core.h"
 #include "Scene\Scene.h"
-
 #include "DX\View.h"
+#include "Utils\Input.h"
 
 using namespace DirectX;
 
-static Core* g_core = nullptr;
+Core* Core::g_core = nullptr;
 
-Core* Core::Get()
-{
-	return g_core;
-}
-
-Core::Core() noexcept(false) :
-	m_deviceResources(nullptr),
-	m_view(nullptr),
-	m_scene(nullptr)
+Core::Core() noexcept( false ) : 
+	m_deviceResources( nullptr ),
+	m_view( nullptr ),
+	m_scene( nullptr ),
+	m_input( nullptr )
 {
 	// DirectX Tool Kit supports all feature levels
 	m_deviceResources = new DX::DeviceResources(
 		DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D24_UNORM_S8_UINT, 2,
-		D3D_FEATURE_LEVEL_9_1);
-	m_deviceResources->RegisterDeviceNotify(this);
+		D3D_FEATURE_LEVEL_9_1 );
+	m_deviceResources->RegisterDeviceNotify( this );
 
-	m_view = new DX::View(m_deviceResources);
+	m_view = new DX::View( m_deviceResources );
 
-	ASSERT(g_core == nullptr, "A core object already exists.\n");
+	ASSERT( g_core == nullptr, "A core object alread exists.\n" );
 	g_core = this;
 }
 
@@ -34,13 +30,15 @@ Core::~Core()
 {
 	delete m_view;
 	delete m_deviceResources;
+
+
 	g_core = nullptr;
 }
 
 // Perform any one-time initialisation
-void Core::Initialise(HWND window, int width, int height)
+void Core::Initialise( HWND window, int width, int height )
 {
-	m_deviceResources->SetWindow(window, width, height);
+	m_deviceResources->SetWindow( window, width, height );
 
 	m_deviceResources->CreateDeviceResources();
 	CreateDeviceDependentResources();
@@ -50,25 +48,23 @@ void Core::Initialise(HWND window, int width, int height)
 
 	m_view->Initialise();
 
-	m_scene = new Scene();
+	m_scene = new scene::Scene();
 	m_scene->Initialise();
+
+	m_input = new Input();
+	m_input->Initialise();
 }
 
 // Clear up and perform any closing actions
 void Core::Shutdown()
 {
-	if (m_view != nullptr)
-	{
-		m_view->Shutdown();
-	}
+	m_view->Shutdown();
 
-	if (m_scene != nullptr)
-	{
-		m_scene->Shutdown();
-	}
-
+	m_scene->Shutdown();
 	delete m_scene;
 	m_scene = nullptr;
+	m_input->Shutdown();
+	delete m_input;
 }
 
 // Each frame update
@@ -77,6 +73,9 @@ void Core::Update()
 	// Update the scene
 	if( m_scene != nullptr )
 		m_scene->Update();
+
+	if (m_input != nullptr)
+		m_input->Update();
 }
 
 // Render the world
@@ -84,7 +83,7 @@ void Core::Render()
 {
 	Clear();
 
-	if (m_view != nullptr)
+	if( m_view != nullptr )
 		m_view->Refresh();
 
 	// Draw the scene

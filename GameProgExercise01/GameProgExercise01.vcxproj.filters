@@ -25,8 +25,8 @@
     <Filter Include="Source Files\Scene">
       <UniqueIdentifier>{f7da0105-25e8-48f8-8a0a-5416fe318356}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Resources">
-      <UniqueIdentifier>{77318b9d-00b1-4274-ba2a-1be911c05a3a}</UniqueIdentifier>
+    <Filter Include="Source Files\Scene\Entities">
+      <UniqueIdentifier>{a3848c7e-6a01-426b-ba18-256d97030b2f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,23 +57,26 @@
     <ClCompile Include="Utils\Maths.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\Ground.cpp">
-      <Filter>Source Files\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Utils\File.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Flower.cpp">
-      <Filter>Source Files\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="DX\View.cpp">
       <Filter>Source Files\DX</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\File.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Entities\TestObject.cpp">
+      <Filter>Source Files\Scene\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Entity.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="Scene\Camera.cpp">
       <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Entities\Ground.cpp">
+      <Filter>Source Files\Scene\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Input.cpp">
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -113,23 +116,26 @@
     <ClInclude Include="Utils\Maths.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\Ground.h">
-      <Filter>Source Files\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\File.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\Flower.h">
-      <Filter>Source Files\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="DX\View.h">
       <Filter>Source Files\DX</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\File.h">
+      <Filter>Source Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Entities\TestObject.h">
+      <Filter>Source Files\Scene\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Entity.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="Scene\Camera.h">
       <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Entities\Ground.h">
+      <Filter>Source Files\Scene\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Input.h">
+      <Filter>Source Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

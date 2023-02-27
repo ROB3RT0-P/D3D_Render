@@ -1,17 +1,20 @@
 #pragma once
 
-class Camera
+namespace scene
 {
-	public:
-		struct ConstantBuffer
-		{
-			DirectX::XMMATRIX cameraMatrix;
-		};
-		static_assert((sizeof(ConstantBuffer) % 16) == 0, "Constant buffer must always be 16-byte aligned");
 
+	class Camera
+	{
+	public:
+		Camera();
 		void Initialise();
 		void Update();
+		void AdjustYRotation(float rotAmount);
 
 	private:
-		DirectX::XMFLOAT4X4 m_cameraMatrix;
-};
+		DirectX::XMVECTOR m_Centre;
+		DirectX::XMVECTOR m_Offset;
+		float m_yAngle = 0.0f;
+
+	};
+}

@@ -5,6 +5,8 @@
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
+//using Microsoft::WRL::ComPtr;
+
 LPCWSTR g_szAppName = L"GameProgExercise01";
 static const float MinFrameTime = 1.0f / 75.0f - 0.0001f;
 
@@ -48,7 +50,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			return 1;
 
 		// Create window
-		int width = 1280, height = 1280;
+		int width = 1280, height = 720;
 
 		RECT rc = { 0, 0, static_cast<LONG>( width ), static_cast<LONG>( height ) };
 
@@ -122,6 +124,12 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 			PostQuitMessage( 0 );
 			break;
 
+		case WM_KEYDOWN:
+		case WM_KEYUP:
+		case WM_SYSKEYUP:
+			Keyboard::ProcessMessage(message, wParam, lParam);
+			break;
+
 		default:
 			break;
 	}
@@ -165,42 +173,44 @@ void WINAPI wWinMainCRTStartup()
 
 	ExitProcess( result );
 }
-
+/*
 #ifdef __cplusplus
 extern "C"
 {
-#pragma function(memset)
-	void* __cdecl memset(_Out_writes_bytes_all_(count) void* dest, _In_ int value, _In_ size_t count)
+	#pragma function(memset)
+	void* __cdecl memset( _Out_writes_bytes_all_( count ) void* dest, _In_ int value, _In_ size_t count )
 	{
 		char* bytes = (char*)dest;
-		while (count--)
+		while( count-- )
 		{
 			*bytes++ = (char)value;
 		}
 		return dest;
 	}
 
-	void* __cdecl memcpy(_Out_writes_bytes_all_(_Size) void* _Dst, _In_reads_bytes_(_Size) void const* _Src, _In_ size_t _Size)
+#ifdef _DEBUG
+	void* __cdecl memcpy( _Out_writes_bytes_all_( _Size ) void* _Dst, _In_reads_bytes_( _Size ) void const* _Src, _In_ size_t _Size	)
 	{
 		char* pszDest = (char*)_Dst;
 		const char* pszSource = (const char*)_Src;
-		if ((pszDest != NULL) && (pszSource != NULL))
+		if( ( pszDest != NULL ) && ( pszSource != NULL ) )
 		{
-			while (_Size) //till cnt
+			while( _Size ) //till cnt
 			{
 				//Copy byte by byte
-				*(pszDest++) = *(pszSource++);
+				*( pszDest++ ) = *( pszSource++ );
 				--_Size;
 			}
 		}
 		return _Dst;
 	}
+#endif //_DEBUG
 
 	int _fltused = 0;
 
-	int _purecall(void)
+	int _purecall( void )
 	{
-		ASSERT(FALSE, "Pure virtual function called.\n");
+		ASSERT( FALSE, "Pure virtual function called.\n" );
 		return 0;
 	}
 
@@ -214,3 +224,4 @@ extern "C"
 }
 
 #endif //__cplusplus
+*/
