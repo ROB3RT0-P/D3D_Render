@@ -23,37 +23,58 @@ namespace scene
 
         auto device = deviceResources->GetD3DDevice();
 
+        UINT totalVertices = NumVertices + 3 * NumPetals;
+
+        scene::Vertex allVertices = new Vertex[totalVertices];
+
         // Create vertex buffer.
         static const Vertex s_vertexData[NumVertices] =
         {
             // Triangle one
             { { 0.0f,   0.0f,  0.0f, 0.0f },{ 0.5f, 0.9f, 0.4f, 1.0f } },  // L
-            { { 0.05f,  2.0f,  0.05f, 1.0f },{ 0.5f, 0.9f, 0.4f, 1.0f } },  // T
+            { { 0.05f,  2.0f,  0.05f, 1.0f },{ 0.0f, 0.8f, 0.4f, 1.0f } },  // T
             { { 0.2f, 0.0f,  0.0f, 1.0f },{ 0.5f, 0.9f, 0.4f, 1.0f } },  // R
 
             // Triangle two
             { { 0.2f,  0.0f,  0.0f, 1.0f },{ 0.5f, 0.9f, 0.4f, 1.0f } },   // L
-            { { 0.05f,  2.0f,  0.05f, 1.0f },{ 0.5f, 0.9f, 0.4f, 1.0f } },  // T
+            { { 0.05f,  2.0f,  0.05f, 1.0f },{ 0.0f, 0.8f, 0.4f, 1.0f } },  // T
             { { 0.1f,   0.0f,  0.1f, 1.0f },{ 0.5f, 0.9f, 0.4f, 1.0f } }, // R
 
             // Triangle three
             { { 0.1f,  0.0f,  0.1f, 1.0f },{ 0.5f, 0.9f, 0.4f, 1.0f } },   // L
-            { { 0.05f,  2.0f,  0.05f, 1.0f },{ 0.5f, 0.9f, 0.4f, 1.0f } },  // T
+            { { 0.05f,  2.0f,  0.05f, 1.0f },{ 0.0f, 0.8f, 0.4f, 1.0f } },  // T
             { { 0.0f,   0.0f,  0.0f, 1.0f },{ 0.5f, 0.9f, 0.4f, 1.0f } }, // R
-
-            /* //Petals
-             // Triangle one - Green
-             { { 0.1f,  2.0f,  0.1f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } },  // Centre
-             { { 0.0f, 0.0f,  0.0f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } },  // Right
-             { { 0.0f, 0.0f,  0.0f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } },  // Left
-             */
         };
 
+        // Fill in the first part of allVertices with the above data
+        {
+         //   NumVertices
+        }
+
+        // Create petals in a loop
+        for (int x; x < NumPetals; ++x)
+            {
+            for (int z; z < NumPetals; ++z)
+            {
+                 //Petals
+                 // Triangle one - Green
+                 { { 0.05f,  2.0f,  0.05f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } },  // Centre
+                 { { 0.0f, 2.0f,  0.2f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } },  // Right
+                 { { 0.1f, 2.0f,  0.25f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } },  // Left
+
+                 { { 0.1f,  2.0f,  0.25f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } },  // Left
+                 { { 0.0f, 2.0f,  0.2f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } },  // Right
+                 { { 0.05f, 2.0f,  0.3f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } }  // Centre
+            }
+            ++NumPetals;
+        }
+
+
         D3D11_SUBRESOURCE_DATA initialData = {};
-        initialData.pSysMem = s_vertexData;
+        initialData.pSysMem = &allVertices;
 
         D3D11_BUFFER_DESC bufferDesc = {};
-        bufferDesc.ByteWidth = sizeof(s_vertexData);
+        bufferDesc.ByteWidth = sizeof(Vertex) * totalVertices;
         bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
         bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         bufferDesc.StructureByteStride = sizeof(Vertex);
@@ -62,6 +83,8 @@ namespace scene
         hr = device->CreateBuffer(&bufferDesc, &initialData,
             &m_vertexBuffer);
         ASSERT_HANDLE(hr);
+
+        delete &allVertices;
     }
 
 
