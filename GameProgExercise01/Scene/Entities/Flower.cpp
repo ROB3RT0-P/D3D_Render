@@ -71,7 +71,7 @@ namespace scene
 
 
         D3D11_SUBRESOURCE_DATA initialData = {};
-        initialData.pSysMem = &allVertices;
+        initialData.pSysMem = allVertices;
 
         D3D11_BUFFER_DESC bufferDesc = {};
         bufferDesc.ByteWidth = sizeof(Vertex) * totalVertices;
@@ -84,7 +84,7 @@ namespace scene
             &m_vertexBuffer);
         ASSERT_HANDLE(hr);
 
-        delete &allVertices;
+        delete allVertices;
     }
 
 
