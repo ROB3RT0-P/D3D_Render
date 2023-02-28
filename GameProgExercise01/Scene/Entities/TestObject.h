@@ -15,7 +15,7 @@ public:
 	void				Render();
 
 private:
-	static const UINT NumVertices = 3;
+	static const UINT NumVertices = 9;
 
 };
 

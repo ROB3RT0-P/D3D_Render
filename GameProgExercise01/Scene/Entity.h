@@ -3,16 +3,16 @@
 namespace scene
 {
 
-// Base class for all entities in the scene - handles setting of world matrix etc..
-class Entity abstract
-{
-public:
 	struct Vertex
 	{
 		DirectX::XMFLOAT4 position;
 		DirectX::XMFLOAT4 color;
 	};
 
+// Base class for all entities in the scene - handles setting of world matrix etc..
+class Entity abstract
+{
+public:
 	Entity();
 	~Entity();
 

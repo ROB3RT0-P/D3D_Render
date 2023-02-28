@@ -25,10 +25,26 @@ void TestObject::Initialise()
 	// Create vertex buffer.
 	static const Vertex VertexData[ NumVertices ] =
 	{
-		{ { 0.0f, 0.0f,  0.5f, 1.0f },{ 1.0f, 0.0f, 0.0f, 1.0f } },  // Top
+		/*
+		{{0.0f, 0.0f,  0.5f, 1.0f},{1.0f, 0.0f, 0.0f, 1.0f}},  // Top
 		{ { 0.5f,  0.0f,  0.0f, 1.0f },{ 0.0f, 1.0f, 0.0f, 1.0f } },  // Right
 		{ { -0.5f, 0.0f,  0.0f, 1.0f },{ 0.0f, 0.0f, 1.0f, 1.0f } },  // Left
+		*/
 
+		// Triangle one
+		{ { -0.5f,   0.0f,  0.0f, 1.0f },{ 1.0f, 0.0f, 0.0f, 1.0f } },  // L
+		{ { 0.0f,  1.0f,  0.5f, 1.0f },{ 1.0f, 0.0f, 0.0f, 1.0f } },  // T
+		{ { 0.5f, 0.0f,  0.0f, 1.0f },{ 1.0f, 0.0f, 0.0f, 1.0f } },  // R
+
+		// Triangle two
+		{ { 0.0f,  0.0f,  1.0f, 1.0f },{ 0.0f, 1.0f, 0.0f, 1.0f } },   // Bottom
+		{ { 0.0f,  1.0f,  0.5f, 1.0f },{ 0.0f, 1.0f, 0.0f, 1.0f } },  // Left
+		{ { -0.5f,   0.0f,  0.0f, 1.0f },{ 0.0f, 1.0f, 0.0f, 1.0f } }, // Right
+
+		// Triangle three
+		{ { 0.5f,  0.0f,  0.0f, 1.0f },{ 0.0f, 0.0f, 1.0f, 1.0f } },   // Bottom
+		{ { 0.0f,  1.0f,  0.5f, 1.0f },{ 1.0f, 0.0f, 0.0f, 1.0f } },  // Left
+		{ { 0.0f,   0.0f,  1.0f, 1.0f },{ 0.0f, 0.0f, 1.0f, 1.0f } } // Right
 	};
 
 	D3D11_SUBRESOURCE_DATA initialData = {};

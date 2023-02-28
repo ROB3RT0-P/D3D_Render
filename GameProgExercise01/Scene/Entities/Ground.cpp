@@ -38,14 +38,15 @@ namespace scene
 
          
             // Triangle one - Green
-            { { -1.0f,   0.0f,  -1.0f, 1.0f },{ 0.0f, 1.0f, 0.0f, 1.0f } },  // Top
-            { { -1.0f,  0.0f,  1.0f, 1.0f },{ 0.0f, 1.0f, 0.0f, 1.0f } },  // Right
-            { { 1.0f, 0.0f,  1.0f, 1.0f },{ 0.0f, 1.0f, 0.0f, 1.0f } },  // Left
+            { { -1.0f,   0.0f,  -1.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },  // Top
+            { { -1.0f,  0.0f,  5.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },  // Right
+            { { 4.0f, 0.0f,  -1.0f, 1.0f },{0.5f, 0.7f, 0.1f, 1.0f } },  // Left
 
             // Triangle two - Green
-            { { -1.0f,   0.0f,  -1.0f, 1.0f },{ 0.0f, 1.0f, 0.0f, 1.0f } },   // Bottom
-            { { 1.0f, 0.0f,  1.0f, 1.0f },{ 0.0f, 1.0f, 0.0f, 1.0f } },  // Left
-            { { 1.0f, 0.0f,  -1.0f, 1.0f },{ 0.0f, 1.0f, 0.0f, 1.0f } } // Right
+            { { 4.0f,   0.0f,  -1.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },   // Bottom
+            { { -1.0f, 0.0f,  5.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },  // Left
+            { { 4.0f, 0.0f,  5.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } }, // Right
+
            
         };
 
@@ -85,5 +86,4 @@ namespace scene
         // Draw triangle.
         context->Draw(NumVertices, 0);
     }
-
 }

@@ -66,6 +66,7 @@
 #include "Utils/Memory.h"
 #include "Utils/Timers.h"
 #include "Utils/File.h"
+#include "Utils/Maths.h"
 #include "Debug.h"
 
 #ifdef _DEBUG
