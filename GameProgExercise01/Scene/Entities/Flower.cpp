@@ -1,10 +1,20 @@
 #include "GameProgExercise01.h"
 #include "Core.h"
 #include "Flower.h"
+#include <math.h>
 
 namespace scene
 {
-    
+    const float PI = 3.1415926535f;
+
+	float DegreeToRadian(float degree)
+	{
+		float radian = 0.0f;
+		radian = degree * (PI / 180);
+		return radian;
+	}
+
+
     Flower::Flower(const UINT x, const UINT z)
     {
         
@@ -23,68 +33,64 @@ namespace scene
 
         auto device = deviceResources->GetD3DDevice();
 
-        UINT totalVertices = NumVertices + 3 * NumPetals;
 
-        scene::Vertex allVertices = new Vertex[totalVertices];
 
         // Create vertex buffer.
         static const Vertex s_vertexData[NumVertices] =
         {
             // Triangle one
             { { 0.0f,   0.0f,  0.0f, 0.0f },{ 0.5f, 0.9f, 0.4f, 1.0f } },  // L
-            { { 0.05f,  2.0f,  0.05f, 1.0f },{ 0.0f, 0.8f, 0.4f, 1.0f } },  // T
-            { { 0.2f, 0.0f,  0.0f, 1.0f },{ 0.5f, 0.9f, 0.4f, 1.0f } },  // R
-
-            // Triangle two
-            { { 0.2f,  0.0f,  0.0f, 1.0f },{ 0.5f, 0.9f, 0.4f, 1.0f } },   // L
-            { { 0.05f,  2.0f,  0.05f, 1.0f },{ 0.0f, 0.8f, 0.4f, 1.0f } },  // T
-            { { 0.1f,   0.0f,  0.1f, 1.0f },{ 0.5f, 0.9f, 0.4f, 1.0f } }, // R
-
-            // Triangle three
-            { { 0.1f,  0.0f,  0.1f, 1.0f },{ 0.5f, 0.9f, 0.4f, 1.0f } },   // L
-            { { 0.05f,  2.0f,  0.05f, 1.0f },{ 0.0f, 0.8f, 0.4f, 1.0f } },  // T
-            { { 0.0f,   0.0f,  0.0f, 1.0f },{ 0.5f, 0.9f, 0.4f, 1.0f } }, // R
+            { { 0.05f,  2.0f,  0.05f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } },  // T
+            { { 0.2f, 0.0f,  0.0f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } },  // R
         };
 
         // Fill in the first part of allVertices with the above data
         {
          //   NumVertices
         }
+        
+        float degreeIncrement = 0.0f;
 
+        UINT totalVertices = PetalNumVertices * NumPetals;
+        
+        
+        Vertex* allVertices = new Vertex[totalVertices];
+        const float flowerScale = 0.5;
+  
         // Create petals in a loop
-        for (int x; x < NumPetals; ++x)
-            {
-            for (int z; z < NumPetals; ++z)
-            {
-                 //Petals
-                 // Triangle one - Green
-                 { { 0.05f,  2.0f,  0.05f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } },  // Centre
-                 { { 0.0f, 2.0f,  0.2f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } },  // Right
-                 { { 0.1f, 2.0f,  0.25f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } },  // Left
+        for (int x = 0; x < NumPetals * 3; ++x)
+        {
+            //Petals
+            allVertices[x] =
+            { { 0.0f, 2.0f,  0.0f, 1.0f },{ 1.0f, 0.0f, 1.0f, 1.0f } }; 
+            ++x;
+            allVertices[x] =
+            { { std::sin(DegreeToRadian(degreeIncrement)) * flowerScale, 2.0f, std::cos(DegreeToRadian(degreeIncrement)) * flowerScale, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+            ++x;
+            allVertices[x] =
+            { { std::sin(DegreeToRadian(degreeIncrement + 45)) * flowerScale, 2.0f, std::cos(DegreeToRadian(degreeIncrement + 45)) * flowerScale, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
 
-                 { { 0.1f,  2.0f,  0.25f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } },  // Left
-                 { { 0.0f, 2.0f,  0.2f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } },  // Right
-                 { { 0.05f, 2.0f,  0.3f, 1.0f },{ 1.0f, 1.0f, 1.0f, 1.0f } }  // Centre
-            }
-            ++NumPetals;
-        }
+            degreeIncrement += 45;
+        };
 
 
-        D3D11_SUBRESOURCE_DATA initialData = {};
-        initialData.pSysMem = allVertices;
+		D3D11_SUBRESOURCE_DATA initialData = {};
+		initialData.pSysMem = allVertices;
 
-        D3D11_BUFFER_DESC bufferDesc = {};
+		D3D11_BUFFER_DESC bufferDesc = {};
         bufferDesc.ByteWidth = sizeof(Vertex) * totalVertices;
-        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-        bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-        bufferDesc.StructureByteStride = sizeof(Vertex);
+		bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+		bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		bufferDesc.StructureByteStride = sizeof(Vertex);
 
 
         hr = device->CreateBuffer(&bufferDesc, &initialData,
             &m_vertexBuffer);
         ASSERT_HANDLE(hr);
 
-        delete allVertices;
+
+
+       delete allVertices;
     }
 
 
@@ -106,6 +112,6 @@ namespace scene
         context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &strides, &offsets);
 
         // Draw triangle.
-        context->Draw(NumVertices, 0);
+        context->Draw(PetalNumVertices * 8, 0);
     }
 }

@@ -10,6 +10,7 @@ namespace scene
 		void Initialise();
 		void Update();
 		void AdjustYRotation(float rotAmount);
+		float DegreeToRadian(float degree);
 
 	private:
 		DirectX::XMVECTOR m_Centre;

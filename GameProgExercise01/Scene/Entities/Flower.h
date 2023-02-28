@@ -12,7 +12,8 @@ namespace scene
     public:
         Flower(const UINT x, const UINT z );
         static const UINT NumVertices = 9;
-        static UINT NumPetals;
+        static const UINT PetalNumVertices = 3;
+        static const UINT NumPetals = 8;
 
         virtual void Render() override;
         virtual void Initialise() override;
