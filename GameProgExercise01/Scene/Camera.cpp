@@ -32,11 +32,13 @@ namespace scene
 
 		// Rotate our offset (offset is along the x-axis)
 		const XMVECTOR rotatedOffset = XMVector3Transform(m_Offset, rotationY);
+
 		XMVECTOR origin = XMVectorZero();
+
+		//XMVECTOR originOffset = XMVECTOR{ 5.0f , 1.0f, 5.0f };
 		XMVECTOR up = XMVECTOR{ 0.0f, 1.0f, 0.0f };
 
 		// Create our view matrix using the look at helper function
-		//XMMATRIX viewMatrix = XMMatrixLookAtLH(rotatedOffset, origin, up);
 		XMMATRIX viewMatrix = XMMatrixLookAtLH(rotatedOffset, origin, up);
 
 		// TODO - pass this view matrix over to View

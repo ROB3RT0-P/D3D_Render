@@ -7,6 +7,7 @@
 #include "Scene\Entities\Ground.h"
 #include "Scene\Camera.h"
 #include "Scene\Entities\Flower.h"
+#include "Scene\Entities\Bee.h"
 
 using namespace DirectX;
 
@@ -17,12 +18,14 @@ Scene::Scene() :
 	m_testObject1( nullptr ),
 	m_testObject2( nullptr ),
 	m_ground( nullptr ),
-	m_camera( nullptr )
+	m_camera( nullptr ),
+	m_bee( nullptr )
 {
 	m_testObject1 = new TestObject();
 	m_testObject2 = new TestObject();
 	m_ground = new Ground();
 	m_camera = new Camera();
+	m_bee = new Bee();
 }
 
 Scene::~Scene()
@@ -31,6 +34,7 @@ Scene::~Scene()
 	delete m_testObject2;
 	delete m_ground;
 	delete m_camera;
+	delete m_bee;
 }
 
 void Scene::Initialise()
@@ -73,6 +77,8 @@ void Scene::Initialise()
 
 	m_camera->Initialise();
 
+	m_bee->Initialise();
+
 	// Example get a number between 0 and 20
 	// utils::Rand() % 20;
 }
@@ -95,6 +101,7 @@ void Scene::Shutdown()
 	m_testObject2->Shutdown();
 	m_testObject1->Shutdown();
 	m_ground->Shutdown();
+	m_bee->Shutdown();
 }
 
 void Scene::Update()
@@ -103,6 +110,7 @@ void Scene::Update()
 	m_testObject2->Update();
 	m_ground->Update();
 	m_camera->Update();
+	m_bee->Update();
 
 	containers::List< Flower*>::iterator itor = m_flowerList.begin();
 	while (itor != m_flowerList.end())
@@ -118,6 +126,7 @@ void Scene::Render()
 	//m_testObject1->Render();
 	//m_testObject2->Render();
 	m_ground->Render();
+	m_bee->Render();
 
 	containers::List< Flower*>::iterator itor = m_flowerList.begin();
 	while (itor != m_flowerList.end())

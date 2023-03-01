@@ -19,38 +19,12 @@ namespace scene
 
         // Create vertex buffer.
         static const Vertex s_vertexData[NumVertices] =
-        {
-              /* // Triangle one
-            { { -0.5f,   0.0f,  0.0f, 1.0f },{ 1.0f, 0.0f, 0.0f, 1.0f } },  // L
-            { { 0.0f,  1.0f,  0.5f, 1.0f },{ 1.0f, 0.0f, 0.0f, 1.0f } },  // T
-            { { 0.5f, 0.0f,  0.0f, 1.0f },{ 1.0f, 0.0f, 0.0f, 1.0f } },  // R
-
-            // Triangle two
-            { { 0.0f,  0.0f,  1.0f, 1.0f },{ 0.0f, 1.0f, 0.0f, 1.0f } },   // Bottom
-            { { 0.0f,  1.0f,  0.5f, 1.0f },{ 0.0f, 1.0f, 0.0f, 1.0f } },  // Left
-            { { -0.5f,   0.0f,  0.0f, 1.0f },{ 0.0f, 1.0f, 0.0f, 1.0f } }, // Right
-
-            // Triangle three
-            { { 0.5f,  0.0f,  0.0f, 1.0f },{ 0.0f, 0.0f, 1.0f, 1.0f } },   // Bottom
-            { { 0.0f,  1.0f,  0.5f, 1.0f },{ 1.0f, 0.0f, 0.0f, 1.0f } },  // Left
-            { { 0.0f,   0.0f,  1.0f, 1.0f },{ 0.0f, 0.0f, 1.0f, 1.0f } } // Right
- */
-
-         
+        {  
             // Triangle one - Green
             { { -1.0f,   0.0f,  -1.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },  // Top
             { { -1.0f,  0.0f,  5.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },  // Right
             { { 4.0f, 0.0f,  -1.0f, 1.0f },{0.5f, 0.7f, 0.1f, 1.0f } },  // Left
-
-            // Triangle two - Green
-            // For rendering as two triangles
-            //{ { 4.0f,   0.0f,  -1.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },   // Bottom
-            //{ { -1.0f, 0.0f,  5.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },  // Left
-
-            //Render as a strip
             { { 4.0f, 0.0f,  5.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } }, // Right
-
-           
         };
 
         D3D11_SUBRESOURCE_DATA initialData = {};

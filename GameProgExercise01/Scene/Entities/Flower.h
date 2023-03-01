@@ -12,7 +12,6 @@ namespace scene
     public:
         Flower(const UINT x, const UINT z );
         static const UINT NumVertices = 9;
-
         static const UINT PetalNumVertices = 3;
         static const UINT NumPetals = 8;
 

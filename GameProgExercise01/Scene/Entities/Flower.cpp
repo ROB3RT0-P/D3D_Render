@@ -33,8 +33,6 @@ namespace scene
 
         auto device = deviceResources->GetD3DDevice();
 
-Vertex *allVertices = new Vertex[totalVertices];
-
 
 
         // Create vertex buffer.
@@ -52,7 +50,6 @@ Vertex *allVertices = new Vertex[totalVertices];
         }
         
         float degreeIncrement = 0.0f;
-
 
         UINT totalVertices = PetalNumVertices * NumPetals;
         
@@ -74,7 +71,6 @@ Vertex *allVertices = new Vertex[totalVertices];
             { { std::sin(DegreeToRadian(degreeIncrement + 45)) * flowerScale, 2.0f, std::cos(DegreeToRadian(degreeIncrement + 45)) * flowerScale, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
 
             degreeIncrement += 45;
-
         };
 
 
@@ -98,8 +94,7 @@ Vertex *allVertices = new Vertex[totalVertices];
     }
 
 
-    //D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
-    
+
     void Flower::Render()
     {
         Entity::Render();

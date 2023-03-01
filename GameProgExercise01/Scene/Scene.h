@@ -5,10 +5,10 @@
 namespace scene
 {
 class Camera;
-
 class TestObject;
 class Ground;
 class Flower;
+class Bee;
 
 // Object containing all the entities and related objects in the scene
 class Scene
@@ -34,6 +34,8 @@ private:
 	TestObject*			m_testObject2;
 	Ground*				m_ground;
 	Camera*				m_camera;
+	Bee*				m_bee;
+
 	containers::List<Flower*> m_flowerList;
 };
 
