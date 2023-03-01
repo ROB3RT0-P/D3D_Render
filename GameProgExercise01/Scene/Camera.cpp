@@ -31,7 +31,8 @@ namespace scene
 		// Rotate our offset (offset is along the x-axis)
 		const XMVECTOR rotatedOffset = XMVector3Transform(m_Offset, rotationY);
 
-		XMVECTOR origin = XMVectorZero();//Change origin
+		//XMVECTOR origin = XMVectorZero();//Change origin
+		XMVECTOR origin = XMVECTOR{ 1.5f, 0.0f, 2.0f };
 
 		XMVECTOR eyePosition = rotatedOffset + origin;//XMVECTOR originOffset = XMVECTOR{ 5.0f , 1.0f, 5.0f };
 		XMVECTOR up = XMVECTOR{ 0.0f, 1.0f, 0.0f, 1.0f };// Create our view matrix using the look at helper function
