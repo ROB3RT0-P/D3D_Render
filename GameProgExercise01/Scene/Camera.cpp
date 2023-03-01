@@ -25,21 +25,17 @@ namespace scene
 
 	void Camera::Update()
 	{
-		// TODO: Change yAngle based on input
-
 		// Create a rotation matrix describing a rotation around the Y axis
 		const XMMATRIX rotationY = XMMatrixRotationY(m_yAngle);
 
 		// Rotate our offset (offset is along the x-axis)
 		const XMVECTOR rotatedOffset = XMVector3Transform(m_Offset, rotationY);
 
-		XMVECTOR origin = XMVectorZero();
+		XMVECTOR origin = XMVectorZero();//Change origin
 
-		//XMVECTOR originOffset = XMVECTOR{ 5.0f , 1.0f, 5.0f };
-		XMVECTOR up = XMVECTOR{ 0.0f, 1.0f, 0.0f };
-
-		// Create our view matrix using the look at helper function
-		XMMATRIX viewMatrix = XMMatrixLookAtLH(rotatedOffset, origin, up);
+		XMVECTOR eyePosition = rotatedOffset + origin;//XMVECTOR originOffset = XMVECTOR{ 5.0f , 1.0f, 5.0f };
+		XMVECTOR up = XMVECTOR{ 0.0f, 1.0f, 0.0f, 1.0f };// Create our view matrix using the look at helper function
+		XMMATRIX viewMatrix = XMMatrixLookAtLH(eyePosition, origin, up);
 
 		// TODO - pass this view matrix over to View
 

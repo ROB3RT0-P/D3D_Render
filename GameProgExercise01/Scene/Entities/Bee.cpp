@@ -9,6 +9,8 @@ namespace scene
     void Bee::Initialise()
     {
         Entity::Initialise();
+        DirectX::XMVECTOR initPos = DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f };
+        SetPosition(initPos);
 
         Core* const core = Core::Get();
 
@@ -72,11 +74,11 @@ namespace scene
     
     void Bee::PosIter()
     {
-        float randFloat = static_cast<float>((rand()%2));
+        float randFloat = static_cast<float>(((rand()%2)*0.05f));
         DirectX::XMVECTORF32 newPos;
         newPos.f[2] = randFloat;
         newPos.f[0] = randFloat;
-        m_position = newPos;
+        newPos.v = m_position + newPos;
         SetPosition(newPos);
     }
 
