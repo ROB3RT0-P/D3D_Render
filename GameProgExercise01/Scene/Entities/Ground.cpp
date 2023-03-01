@@ -43,8 +43,11 @@ namespace scene
             { { 4.0f, 0.0f,  -1.0f, 1.0f },{0.5f, 0.7f, 0.1f, 1.0f } },  // Left
 
             // Triangle two - Green
-            { { 4.0f,   0.0f,  -1.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },   // Bottom
-            { { -1.0f, 0.0f,  5.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },  // Left
+            // For rendering as two triangles
+            //{ { 4.0f,   0.0f,  -1.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },   // Bottom
+            //{ { -1.0f, 0.0f,  5.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },  // Left
+
+            //Render as a strip
             { { 4.0f, 0.0f,  5.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } }, // Right
 
            
@@ -80,7 +83,7 @@ namespace scene
 
         UINT strides = sizeof(Vertex);
         UINT offsets = 0;
-        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
         context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &strides, &offsets);
 
         // Draw triangle.
