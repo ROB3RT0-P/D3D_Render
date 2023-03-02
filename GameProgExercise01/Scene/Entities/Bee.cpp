@@ -86,30 +86,42 @@ namespace scene
         //D = P2 - P1
         //Normalise(D) = Dn
         //Dn * S
-        float speed = 1.0f;
+
         DirectX::XMVECTOR direction = DirectX::XMVectorSubtract(flowerPosition, m_position);
         DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(direction);
         DirectX::XMVECTOR flowerVelocity = DirectX::XMVectorScale(normalisedDir, speed);
 
         //S1 = S0 + V * T
-        DirectX::XMVECTOR NewPos = DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f };
+        DirectX::XMVECTORF32 NewPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
         //NewPos = DirectX::XMVectorScale( Velocity , timeStep );
-        NewPos = DirectX::XMVectorScale( flowerVelocity, timeStep);
-        NewPos += m_position;
+        NewPos.v = DirectX::XMVectorScale( flowerVelocity, timeStep );
+        NewPos.v += m_position;
         SetPosition(NewPos);
+
+        DirectX::XMVECTORF32 curPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
+        curPos.v = NewPos;
+
+        DirectX::XMVECTORF32 checkPosMin = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
+        checkPosMin.v = flowerPosition;
+        checkPosMin.f[0] -= 0.01f;
+        checkPosMin.f[1] -= 0.01f;
+        checkPosMin.f[2] -= 0.01f;
+
+        DirectX::XMVECTORF32 checkPosMax = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
+        checkPosMax.v = flowerPosition;
+        checkPosMax.f[0] += 0.01f;
+        checkPosMax.f[1] += 0.01f;
+        checkPosMax.f[2] += 0.01f;
+
+        if (curPos.f[0] > checkPosMin.f[0] && curPos.f[0] < checkPosMax.f[0] && curPos.f[1] > checkPosMin.f[1] && curPos.f[1] < checkPosMax.f[1] && curPos.f[2] > checkPosMin.f[2] && curPos.f[2] < checkPosMax.f[2])
+        {
+            m_outOfBounds = true;
+        }
     }
  
     void Bee::Update()
     {
         PosIter();
-        
-        
-        DirectX::XMVECTORF32 checkPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
-        checkPos.v = m_position;
-        if (checkPos[0] > 4.0f)
-        {
-            m_outOfBounds = true;
-        }
     }
     
     bool Bee::OutOfBounds()

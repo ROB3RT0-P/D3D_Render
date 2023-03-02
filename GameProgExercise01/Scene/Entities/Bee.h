@@ -4,6 +4,7 @@
 #include "Scene\Entity.h"
 
 
+
 namespace scene
 {
 
@@ -20,6 +21,8 @@ namespace scene
         bool OutOfBounds();
 
         DirectX::XMVECTOR Velocity = DirectX::XMVECTOR{ 4.0f, 0.0f, 0.0f };
+
+        const float speed = utils::Rand() % (5 - 1) + 1;
         
     private:
         bool m_outOfBounds = false;

@@ -14,6 +14,7 @@ namespace scene
         static const UINT NumVertices = 9;
         static const UINT PetalNumVertices = 3;
         static const UINT NumPetals = 8;
+        const float PetalHeight = 2.0f;
 
         virtual void Render() override;
         virtual void Initialise() override;

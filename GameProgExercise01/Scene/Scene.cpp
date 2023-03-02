@@ -78,9 +78,6 @@ void Scene::Initialise()
 	m_camera->Initialise();
 
 	m_bee->Initialise();
-
-	// Example get a number between 0 and 20
-	// utils::Rand() % 20;
 }
 
 void Scene::Shutdown()
@@ -128,10 +125,6 @@ void Scene::Update()
 		m_bee = new Bee();
 		m_bee->Initialise();
 	}
-
-	
-	//DirectX::XMVECTOR flowerPos = flower->GetPosition();
-
 }
 
 Flower* Scene::GetFlower()

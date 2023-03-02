@@ -24,7 +24,9 @@ namespace scene
     void Flower::Initialise()
     {
         Entity::Initialise();
-
+        DirectX::XMVECTORF32 petalPos = m_position;
+        petalPos.f[1] = PetalHeight;
+        
         Core* const core = Core::Get();
 
         const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
@@ -62,13 +64,13 @@ namespace scene
         {
             //Petals
             allVertices[x] =
-            { { 0.0f, 2.0f,  0.0f, 1.0f },{ 1.0f, 0.0f, 1.0f, 1.0f } }; 
+            { { 0.0f, PetalHeight,  0.0f, 1.0f},{1.0f, 0.0f, 1.0f, 1.0f}};
             ++x;
             allVertices[x] =
-            { { std::sin(DegreeToRadian(degreeIncrement)) * flowerScale, 2.0f, std::cos(DegreeToRadian(degreeIncrement)) * flowerScale, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+            { { std::sin(DegreeToRadian(degreeIncrement)) * flowerScale, PetalHeight, std::cos(DegreeToRadian(degreeIncrement)) * flowerScale, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}};
             ++x;
             allVertices[x] =
-            { { std::sin(DegreeToRadian(degreeIncrement + 45)) * flowerScale, 2.0f, std::cos(DegreeToRadian(degreeIncrement + 45)) * flowerScale, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+            { { std::sin(DegreeToRadian(degreeIncrement + 45)) * flowerScale, PetalHeight, std::cos(DegreeToRadian(degreeIncrement + 45)) * flowerScale, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}};
 
             degreeIncrement += 45;
         };
