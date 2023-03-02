@@ -13,7 +13,6 @@
 using namespace DirectX;
 namespace scene
 {
-
 	Camera::Camera():m_yAngle(XM_PI * 0.5f)
 	{
 		m_Centre = XMVectorZero();

@@ -7,16 +7,13 @@ namespace scene
 
 class TestObject : public Entity
 {
-public:
-	TestObject();
+	public:
+		TestObject();
 
-	void				Initialise();
+		void				Initialise();
+		void				Render();
 
-	void				Render();
-
-private:
-	static const UINT NumVertices = 9;
-
+	private:
+		static const UINT NumVertices = 9;
 };
-
 } // namespace scene

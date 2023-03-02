@@ -86,7 +86,6 @@ namespace scene
         //D = P2 - P1
         //Normalise(D) = Dn
         //Dn * S
-
         DirectX::XMVECTOR direction = DirectX::XMVectorSubtract(flowerPosition, m_position);
         DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(direction);
         DirectX::XMVECTOR flowerVelocity = DirectX::XMVectorScale(normalisedDir, speed);
@@ -113,7 +112,8 @@ namespace scene
         checkPosMax.f[1] += 0.01f;
         checkPosMax.f[2] += 0.01f;
 
-        if (curPos.f[0] > checkPosMin.f[0] && curPos.f[0] < checkPosMax.f[0] && curPos.f[1] > checkPosMin.f[1] && curPos.f[1] < checkPosMax.f[1] && curPos.f[2] > checkPosMin.f[2] && curPos.f[2] < checkPosMax.f[2])
+        if (curPos.f[0] > checkPosMin.f[0] && curPos.f[0] < checkPosMax.f[0] && curPos.f[1] > checkPosMin.f[1] 
+            && curPos.f[1] < checkPosMax.f[1] && curPos.f[2] > checkPosMin.f[2] && curPos.f[2] < checkPosMax.f[2])
         {
             m_outOfBounds = true;
         }

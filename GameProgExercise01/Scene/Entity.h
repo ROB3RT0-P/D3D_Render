@@ -2,48 +2,46 @@
 
 namespace scene
 {
-
 	struct Vertex
 	{
 		DirectX::XMFLOAT4 position;
 		DirectX::XMFLOAT4 color;
 	};
 
-// Base class for all entities in the scene - handles setting of world matrix etc..
-class Entity abstract
-{
-public:
-	Entity();
-	~Entity();
-
-	virtual void					Initialise();
-	virtual void					Shutdown();
-
-	virtual void					Update();
-	virtual void					Render();
-
-	void					SetPosition(const DirectX::XMVECTOR position);
-	void					SetOrientation( const DirectX::XMMATRIX& orientation );
-	void					SetScale(const float scale)
+	// Base class for all entities in the scene - handles setting of world matrix etc..
+	class Entity abstract
 	{
-		m_scale = scale;
-	}
+	public:
+		Entity();
+		~Entity();
 
-	DirectX::XMVECTOR				GetPosition() const 
-	{
-		return m_position;
-	}
+		virtual void					Initialise();
+		virtual void					Shutdown();
 
-protected:
-	ID3D11InputLayout*		m_inputLayout;
-	ID3D11VertexShader*		m_vertexShader;
-	ID3D11PixelShader*		m_pixelShader;
-	ID3D11Buffer*			m_vertexBuffer;
-	ID3D11Buffer*			m_constantBuffer;
+		virtual void					Update();
+		virtual void					Render();
 
-	DirectX::XMVECTORF32	m_position;
-	DirectX::XMMATRIX		m_orientation;
-	float					m_scale;
-};
+		void					SetPosition(const DirectX::XMVECTOR position);
+		void					SetOrientation( const DirectX::XMMATRIX& orientation );
+		void					SetScale(const float scale)
+		{
+			m_scale = scale;
+		}
 
+		DirectX::XMVECTOR				GetPosition() const 
+		{
+			return m_position;
+		}
+
+	protected:
+		ID3D11InputLayout*		m_inputLayout;
+		ID3D11VertexShader*		m_vertexShader;
+		ID3D11PixelShader*		m_pixelShader;
+		ID3D11Buffer*			m_vertexBuffer;
+		ID3D11Buffer*			m_constantBuffer;
+
+		DirectX::XMVECTORF32	m_position;
+		DirectX::XMMATRIX		m_orientation;
+		float					m_scale;
+	};
 } // namespace scene

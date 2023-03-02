@@ -16,7 +16,6 @@ namespace scene
         virtual void Initialise() override;
 
     private:
-
         virtual void OnDeviceLost() {}
         virtual void OnDeviceRestored() {}
     };

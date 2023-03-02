@@ -16,6 +16,5 @@ namespace scene
 		DirectX::XMVECTOR m_Centre;
 		DirectX::XMVECTOR m_Offset;
 		float m_yAngle;
-
 	};
 }

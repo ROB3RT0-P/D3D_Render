@@ -32,10 +32,3 @@ void Input::Update()
 	}
 	camera->AdjustYRotation(yRotAdjustment);
 }
-
-
-
-/*
-#include <iostream>
-std::cout << "L R Key Pressed";
-*/

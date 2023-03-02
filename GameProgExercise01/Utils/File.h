@@ -2,11 +2,11 @@
 
 namespace utils
 {
-namespace file
-{
+	namespace file
+	{
 
-HANDLE GetFileData( const char* const filename, void** outData, DWORD* size );
-void CloseFile( const HANDLE fileHandle );
+		HANDLE GetFileData( const char* const filename, void** outData, DWORD* size );
+		void CloseFile( const HANDLE fileHandle );
 
-} // namespace file
+	} // namespace file
 } // namespace utils

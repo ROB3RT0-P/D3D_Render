@@ -36,7 +36,6 @@ namespace scene
         bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         bufferDesc.StructureByteStride = sizeof( Vertex );
 
-
         hr = device->CreateBuffer(&bufferDesc, &initialData,
             &m_vertexBuffer);
         ASSERT_HANDLE(hr);
@@ -53,7 +52,6 @@ namespace scene
         const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
 
         auto context = deviceResources->GetD3DDeviceContext();
-
 
         UINT strides = sizeof(Vertex);
         UINT offsets = 0;
