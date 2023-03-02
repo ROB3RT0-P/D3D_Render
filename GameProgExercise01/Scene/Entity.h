@@ -24,7 +24,15 @@ public:
 
 	void					SetPosition(const DirectX::XMVECTOR position);
 	void					SetOrientation( const DirectX::XMMATRIX& orientation );
-	void					SetScale(const float scale);
+	void					SetScale(const float scale)
+	{
+		m_scale = scale;
+	}
+
+	DirectX::XMVECTOR				GetPosition() const 
+	{
+		return m_position;
+	}
 
 protected:
 	ID3D11InputLayout*		m_inputLayout;

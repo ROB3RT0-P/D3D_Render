@@ -1,7 +1,9 @@
 #include "GameProgExercise01.h"
 #include "Core.h"
 #include "Bee.h"
-#include "Math.h"
+#include "Scene\Scene.h"
+#include "Scene\Entities\Flower.h"
+
 
 namespace scene
 {
@@ -9,12 +11,10 @@ namespace scene
     void Bee::Initialise()
     {
         Entity::Initialise();
-       // DirectX::XMVECTOR initPos = DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f };
-       // SetPosition(initPos);
-       // SetScale(0.2f);
+        SetScale(0.2f);
 
-
-        DirectX::XMVECTOR startPos = DirectX::XMVECTOR{ 0.0f, 2.0f, static_cast<float>((rand() % 10)) };
+        float zPos = static_cast<float>(utils::Rand() % 5);
+        DirectX::XMVECTOR startPos = DirectX::XMVECTOR{ -1.0f, 3.0f, zPos };
         SetPosition( startPos );
 
         Core* const core = Core::Get();
@@ -73,25 +73,48 @@ namespace scene
 
     DirectX::XMVECTORF32 newPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
     
-    
-    
     void Bee::PosIter()
     {
-        float randFloat = static_cast<float>(((rand()%2)*0.05f));
-        DirectX::XMVECTORF32 newPos;
-        newPos.f[0] = 0.1f;
-        newPos.f[1] = 0.0f;
-        newPos.f[2] = 0.0f;
-        //newPos.f[2] = randFloat;
-        newPos.v = m_position + newPos;
-        SetPosition(newPos);
+        const Core* const core = Core::Get();
+        Scene* scene = core->GetScene();
+        Flower* const flower = scene->GetFlower();
+        DirectX::XMVECTOR flowerPosition = flower->GetPosition();
+
+        float timeStep = utils::Timers::GetFrameTime();
+        
+        //S = 1.0f
+        //D = P2 - P1
+        //Normalise(D) = Dn
+        //Dn * S
+        float speed = 1.0f;
+        DirectX::XMVECTOR direction = DirectX::XMVectorSubtract(flowerPosition, m_position);
+        DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(direction);
+        DirectX::XMVECTOR flowerVelocity = DirectX::XMVectorScale(normalisedDir, speed);
+
+        //S1 = S0 + V * T
+        DirectX::XMVECTOR NewPos = DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f };
+        //NewPos = DirectX::XMVectorScale( Velocity , timeStep );
+        NewPos = DirectX::XMVectorScale( flowerVelocity, timeStep);
+        NewPos += m_position;
+        SetPosition(NewPos);
     }
-
-    
-
+ 
     void Bee::Update()
     {
         PosIter();
+        
+        
+        DirectX::XMVECTORF32 checkPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
+        checkPos.v = m_position;
+        if (checkPos[0] > 4.0f)
+        {
+            m_outOfBounds = true;
+        }
+    }
+    
+    bool Bee::OutOfBounds()
+    {
+        return m_outOfBounds;
     }
 
     void Bee::Render()

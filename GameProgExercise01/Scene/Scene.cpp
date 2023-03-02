@@ -119,6 +119,25 @@ void Scene::Update()
 		flower->Update();
 		++itor;
 	}
+
+	if (m_bee->OutOfBounds())
+	{
+		m_bee->Shutdown();
+		delete m_bee;
+
+		m_bee = new Bee();
+		m_bee->Initialise();
+	}
+
+	
+	//DirectX::XMVECTOR flowerPos = flower->GetPosition();
+
+}
+
+Flower* Scene::GetFlower()
+{
+	Flower* flower = *m_flowerList.begin();
+	return flower;
 }
 
 void Scene::Render()

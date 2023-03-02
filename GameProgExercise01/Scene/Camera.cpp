@@ -14,8 +14,10 @@ using namespace DirectX;
 namespace scene
 {
 
-	Camera::Camera()
+	Camera::Camera():m_yAngle(XM_PI * 0.5f)
 	{
+		m_Centre = XMVectorZero();
+		m_Offset = XMVectorZero();
 	}
 
 	void Camera::Initialise()
@@ -38,15 +40,11 @@ namespace scene
 		XMVECTOR up = XMVECTOR{ 0.0f, 1.0f, 0.0f, 1.0f };// Create our view matrix using the look at helper function
 		XMMATRIX viewMatrix = XMMatrixLookAtLH(eyePosition, origin, up);
 
-		// TODO - pass this view matrix over to View
-
-
 		const Core* const core = Core::Get();
 		DX::View* view = core->GetView();
 		XMFLOAT4X4 viewMatrixAsFloat4x4;
 		XMStoreFloat4x4(&viewMatrixAsFloat4x4, viewMatrix);
 		view->SetViewMatrix(viewMatrixAsFloat4x4);
-
 	}
 
 	void Camera::AdjustYRotation(float rotAmount)

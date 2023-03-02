@@ -17,10 +17,13 @@ namespace scene
         void Update();
         void PosIter();
 
-    private:
+        bool OutOfBounds();
 
+        DirectX::XMVECTOR Velocity = DirectX::XMVECTOR{ 4.0f, 0.0f, 0.0f };
+        
+    private:
+        bool m_outOfBounds = false;
         virtual void OnDeviceLost() {}
         virtual void OnDeviceRestored() {}
     };
-
 }

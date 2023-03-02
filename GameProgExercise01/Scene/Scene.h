@@ -24,10 +24,13 @@ public:
 	void				Update();
 	void				Render();
 
+	Flower* GetFlower();
+
 	inline Camera*		GetCamera() const
 	{
 		return m_camera;
 	}
+
 
 private:
 	TestObject*			m_testObject1;
