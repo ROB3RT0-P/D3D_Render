@@ -16,6 +16,7 @@ namespace scene
 		m_constantBuffer( nullptr )
 	{
 		m_orientation = XMMatrixIdentity();
+		m_orientationAsVector = XMVectorZero();
 		m_position.v = XMVectorZero();
 		m_position.f[ 3 ] = 1.0f;
 		m_scale = 1.0f;
@@ -144,6 +145,14 @@ namespace scene
 	void Entity::SetOrientation( const DirectX::XMMATRIX& orientation )
 	{
 		m_orientation = orientation;
+	}
+
+	void Entity::SetOrientation(const DirectX::XMVECTOR& orientation)
+	{
+		//float length = XMVector3LengthEst(XMLoadFloat4x4(orientation.m128_f32) );
+		XMVECTOR up = XMVECTOR{ 0.0f, 1.0f, 0.0f, 1.0f };
+		m_orientationAsVector = orientation;
+		m_orientation = XMMatrixLookToLH(XMVectorZero(), orientation, up);
 	}
 
 } //namespace scene

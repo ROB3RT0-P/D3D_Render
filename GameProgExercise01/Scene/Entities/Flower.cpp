@@ -56,15 +56,51 @@ namespace scene
         
         float degreeIncrement = 0.0f;
 
-        UINT totalVertices = PetalNumVertices * NumPetals;
+        UINT totalVertices = PetalNumVertices * NumPetals + 9;
         
         Vertex* allVertices = new Vertex[totalVertices];
         const float flowerScale = 0.5;
-  
+        
+        int x = 0;
+
+            // Triangle one
+            allVertices[x] =
+            { { -0.05f,  -2.0f, 0.0f,  1.0f }, { 0.5f, 0.9f, 0.4f, 1.0f } };    // L
+            ++x;
+            allVertices[x] =
+            { { 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };         // T
+            ++x;
+            allVertices[x] =
+            { { 0.05f,  -2.0f, 0.0f,  1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };     // R
+            ++x;
+
+            //Triangle two
+            allVertices[x] =
+            { { 0.05f,  -2.0f, 0.0f,  1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };     // L
+            ++x;
+            allVertices[x] =
+            { { 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };         // T
+            ++x;
+            allVertices[x] =
+            { { 0.0f, -2.0f, 0.1f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };        // R
+            ++x;
+
+            //Triangle three    
+            allVertices[x] =
+            { { 0.0f, -2.0f, 0.1f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };        // L
+            ++x;
+            allVertices[x] =
+            { { 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };         // T
+            ++x;
+            allVertices[x] =
+            { { -0.05f,  -2.0f, 0.0f,  1.0f }, { 0.5f, 0.9f, 0.4f, 1.0f } };    // R
+            ++x;
+        
         // Create petals in a loop
-        for (int x = 0; x < NumPetals * 3; ++x)
+        for (; x < (NumPetals * 3) + 9; ++x)
         {
-            //Petals
+
+                //Petals
             allVertices[x] =
             { { 0.0f, PetalHeight - 2.0f,  0.0f, 1.0f},{1.0f, 0.0f, 1.0f, 1.0f}};
             ++x;
@@ -109,6 +145,6 @@ namespace scene
         context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &strides, &offsets);
 
         // Draw triangle.
-        context->Draw(PetalNumVertices * 8, 0);
+        context->Draw(PetalNumVertices * 8 + 9, 0);
     }
 }

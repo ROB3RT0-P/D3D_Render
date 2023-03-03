@@ -8,6 +8,7 @@
 #include "Scene\Camera.h"
 #include "Scene\Entities\Flower.h"
 #include "Scene\Entities\Bee.h"
+#include "Utils\Maths.h"
 
 using namespace DirectX;
 
@@ -49,6 +50,12 @@ namespace scene
 			}
 		}
 
+		for (UINT beeGridZ = 0; beeGridZ < BeeNum*300; ++beeGridZ)
+		{
+			Bee* bee = new Bee();
+			m_beeList.push_back(bee);
+		}
+
 		XMVECTOR position;
 		XMMATRIX orientation;
 
@@ -62,6 +69,14 @@ namespace scene
 			Flower* flower = *itor;
 			flower->Initialise();
 			++itor;
+		}
+
+		containers::List<Bee*>::iterator itorBee = m_beeList.begin();
+		while (itorBee != m_beeList.end())
+		{
+			Bee* bee = *itorBee;
+			bee->Initialise();
+			++itorBee;
 		}
 
 		position = XMVectorSet( -2.0f, 0.0f, 0.0f, 1.0f );
@@ -95,6 +110,15 @@ namespace scene
 		}
 		m_flowerList.clear();
 
+		containers::List<Bee*>::iterator itorBee = m_beeList.begin();
+		while (itorBee != m_beeList.end())
+		{
+			Bee* beeToDelete = *itorBee;
+			delete beeToDelete;
+			++itorBee;
+		}
+		m_beeList.clear();
+
 		m_testObject2->Shutdown();
 		m_testObject1->Shutdown();
 		m_ground->Shutdown();
@@ -117,6 +141,23 @@ namespace scene
 			++itor;
 		}
 
+		containers::List<Bee*>::iterator itorBee = m_beeList.begin();
+		while (itorBee != m_beeList.end())
+		{
+			Bee* bee = *itorBee;
+			bee->Update();
+			++itorBee;
+
+			if (bee->OutOfBounds())
+			{
+				bee->Shutdown();
+				delete bee;
+
+				bee = new Bee();
+				bee->Initialise();
+			}
+		}
+
 		if (m_bee->OutOfBounds())
 		{
 			m_bee->Shutdown();
@@ -127,10 +168,23 @@ namespace scene
 		}
 	}
 
-	Flower* Scene::GetFlower()
+	Flower* Scene::GetRandFlower()
 	{
-		Flower* flower = *m_flowerList.begin();
-		return flower;
+		int randFlowerFromList = (utils::Rand() % (FlowerGridSize*FlowerGridSize));
+		int i = 0;
+
+		containers::List< Flower*>::iterator itor = m_flowerList.begin();
+		while (itor != m_flowerList.end())
+		{
+			if(i == randFlowerFromList)
+			{	
+				Flower* flower = *itor;
+				return flower;
+			}
+			++i;
+			++itor;
+		}
+		return nullptr;
 	}
 
 	void Scene::Render()
@@ -146,6 +200,14 @@ namespace scene
 			Flower* flower = *itor;
 			flower->Render();
 			++itor;
+		}
+
+		containers::List<Bee*>::iterator itorBee = m_beeList.begin();
+		while (itorBee != m_beeList.end())
+		{
+			Bee* bee = *itorBee;
+			bee->Render();
+			++itorBee;
 		}
 	}
 } // namespace scene

@@ -7,17 +7,38 @@
 
 namespace scene
 {
+    Bee::Bee() :
+        m_outOfBounds( false )
+    {
+
+    }
+
+    Bee::~Bee()
+    {
+    }
 
     void Bee::Initialise()
     {
+        static const float MaxSpeed = 4.0f;
+
         Entity::Initialise();
         SetScale(0.2f);
+        DirectX::XMVECTOR beeOrientation = DirectX::XMVECTOR{ 1.0f, 0.0f, 1.0f };
+        SetOrientation( beeOrientation );
+
+        m_speed = static_cast<float>((utils::Rand() % 10000) / 10000.0f); // Gives float 0.0 - 1.0f
+        m_speed *= MaxSpeed;
+
+        m_nectar = false;
+
+        const Core* const core = Core::Get();
+        Scene* scene = core->GetScene();
+        Flower* const flower = scene->GetRandFlower();
+        m_flowerPosition = flower->GetPosition();
 
         float zPos = static_cast<float>(utils::Rand() % 5);
-        DirectX::XMVECTOR startPos = DirectX::XMVECTOR{ -1.0f, 3.0f, zPos };
+        DirectX::XMVECTOR startPos = DirectX::XMVECTOR{ -15.0f, 3.0f, zPos };
         SetPosition( startPos );
-
-        Core* const core = Core::Get();
 
         const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
 
@@ -46,14 +67,14 @@ namespace scene
             { { 1.0f, 1.0f,  1.0f, 1.0f },{ 1.0f, 1.0f, 0.0f, 1.0f } },     //13
 
             //Stripe
-            { { 1.01f, 0.0f,  0.4f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },    //1
-            { { 1.01f, 0.0f,  0.6f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },    //2
-            { { 1.01f, 1.01f,  0.4f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },   //3
-            { { 1.01f, 1.01f,  0.6f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },   //4
-            { { -0.01f, 1.01f,  0.4f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },  //5
-            { { -0.01f, 1.01f,  0.6f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },  //6
-            { { -0.01f, 0.0f,  0.4f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },   //7
-            { { -0.01f, 0.0f,  0.6f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } }    //8
+            { { 0.4f, 0.0f,  -0.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },    //1
+            { { 0.6f, 0.0f,  -0.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },    //2
+            { { 0.4f, 1.01f,  -0.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },   //3
+            { { 0.6f, 1.01f,  -0.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },   //4
+            { { 0.4f, 1.01f,  1.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },  //5
+            { { 0.6f, 1.01f,  1.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },  //6
+            { { 0.4f, 0.0f,  1.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },   //7
+            { { 0.6f, 0.0f,  1.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } }    //8
         };
 
         D3D11_SUBRESOURCE_DATA initialData = {};
@@ -75,50 +96,84 @@ namespace scene
     
     void Bee::PosIter()
     {
-        const Core* const core = Core::Get();
-        Scene* scene = core->GetScene();
-        Flower* const flower = scene->GetFlower();
-        DirectX::XMVECTOR flowerPosition = flower->GetPosition();
-
-        float timeStep = utils::Timers::GetFrameTime();
+        m_timeStep = utils::Timers::GetFrameTime();
         
-        //S = 1.0f
-        //D = P2 - P1
-        //Normalise(D) = Dn
-        //Dn * S
-        DirectX::XMVECTOR direction = DirectX::XMVectorSubtract(flowerPosition, m_position);
-        DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(direction);
-        DirectX::XMVECTOR flowerVelocity = DirectX::XMVectorScale(normalisedDir, speed);
-
-        //S1 = S0 + V * T
-        DirectX::XMVECTORF32 NewPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
-        //NewPos = DirectX::XMVectorScale( Velocity , timeStep );
-        NewPos.v = DirectX::XMVectorScale( flowerVelocity, timeStep );
-        NewPos.v += m_position;
-        SetPosition(NewPos);
-
-        DirectX::XMVECTORF32 curPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
-        curPos.v = NewPos;
-
-        DirectX::XMVECTORF32 checkPosMin = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
-        checkPosMin.v = flowerPosition;
-        checkPosMin.f[0] -= 0.01f;
-        checkPosMin.f[1] -= 0.01f;
-        checkPosMin.f[2] -= 0.01f;
-
-        DirectX::XMVECTORF32 checkPosMax = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
-        checkPosMax.v = flowerPosition;
-        checkPosMax.f[0] += 0.01f;
-        checkPosMax.f[1] += 0.01f;
-        checkPosMax.f[2] += 0.01f;
-
-        if (curPos.f[0] > checkPosMin.f[0] && curPos.f[0] < checkPosMax.f[0] && curPos.f[1] > checkPosMin.f[1] 
-            && curPos.f[1] < checkPosMax.f[1] && curPos.f[2] > checkPosMin.f[2] && curPos.f[2] < checkPosMax.f[2])
+        if (!m_nectar)
         {
-            m_outOfBounds = true;
+            DirectX::XMVECTOR direction = DirectX::XMVectorSubtract(m_flowerPosition, m_position);
+            DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(direction);
+            DirectX::XMVECTOR flowerVelocity = DirectX::XMVectorScale(normalisedDir, m_speed);
+
+            DirectX::XMVECTORF32 newPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
+            //NewPos = DirectX::XMVectorScale( Velocity , timeStep );
+            newPos.v = DirectX::XMVectorScale(flowerVelocity, m_timeStep);
+            newPos.v += m_position;
+
+            DirectX::XMVECTOR lerpDir = DirectX::XMVectorLerp(m_orientationAsVector, direction, 0.12f * m_timeStep);
+            SetOrientation(lerpDir);
+            SetPosition( newPos + (DirectX::XMVectorScale(lerpDir, m_speed)));
+            
+            DirectX::XMVECTOR checkPos = m_position - m_flowerPosition;
+            DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst( checkPos );
+            float distanceAsFloat = *checkPosLen.m128_f32;
+            if (distanceAsFloat < 0.2f )
+            {
+                m_nectar = true;
+            }
+
+            /*
+            DirectX::XMVECTORF32 curPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
+            curPos.v = newPos;
+
+            DirectX::XMVECTORF32 checkPosMin = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
+            checkPosMin.v = flowerPosition;
+            checkPosMin.f[0] -= 0.02f;
+            checkPosMin.f[1] -= 0.02f;
+            checkPosMin.f[2] -= 0.02f;
+
+            DirectX::XMVECTORF32 checkPosMax = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
+            checkPosMax.v = flowerPosition;
+            checkPosMax.f[0] += 0.02f;
+            checkPosMax.f[1] += 0.02f;
+            checkPosMax.f[2] += 0.02f;
+            
+            if (curPos.f[0] > checkPosMin.f[0] && curPos.f[0] < checkPosMax.f[0] && curPos.f[1] > checkPosMin.f[1]
+                    && curPos.f[1] < checkPosMax.f[1] && curPos.f[2] > checkPosMin.f[2] && curPos.f[2] < checkPosMax.f[2])
+                {
+                    nectar = true;
+                }
+            */
+        }
+
+        if (m_nectar)
+        {
+            //m_outOfBounds = true;
+
+            float xBounds = 14.9f;
+
+            DirectX::XMVECTOR curPos = m_position;
+
+            float randZ = static_cast<float>(utils::Rand() % 5);
+            DirectX::XMVECTOR leaveDir = DirectX::XMVECTOR{ 15.0f, 3.0f, randZ };
+
+            DirectX::XMVECTOR direction = DirectX::XMVectorSubtract(leaveDir, m_position);
+            DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(direction);
+            DirectX::XMVECTOR BoundaryVelocity = DirectX::XMVectorScale(normalisedDir, m_speed*80);
+
+            DirectX::XMVECTOR newPos = DirectX::XMVectorScale( BoundaryVelocity , m_timeStep );
+            m_position.v = DirectX::XMVectorAdd( m_position.v, newPos );
+
+      
+
+            SetPosition( m_position.v );
+
+            if (m_position.f[0] >= xBounds)
+            {
+               m_outOfBounds = true;
+            }
         }
     }
- 
+
     void Bee::Update()
     {
         PosIter();
@@ -138,7 +193,6 @@ namespace scene
         const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
 
         auto context = deviceResources->GetD3DDeviceContext();
-
 
         UINT strides = sizeof(Vertex);
         UINT offsets = 0;

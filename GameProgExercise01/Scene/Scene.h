@@ -15,6 +15,7 @@ namespace scene
 	{
 	public:
 		static const UINT FlowerGridSize = 4;
+		static const UINT BeeNum = 3;
 
 		Scene();
 		~Scene();
@@ -24,7 +25,7 @@ namespace scene
 		void				Update();
 		void				Render();
 
-		Flower* GetFlower();
+		Flower* GetRandFlower();
 
 		inline Camera*		GetCamera() const
 		{
@@ -38,7 +39,8 @@ namespace scene
 		Ground*				m_ground;
 		Camera*				m_camera;
 		Bee*				m_bee;
-
+		
+		containers::List<Bee*> m_beeList;
 		containers::List<Flower*> m_flowerList;
 	};
 } // namespace scene

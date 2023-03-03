@@ -23,6 +23,7 @@ namespace scene
 
 		void					SetPosition(const DirectX::XMVECTOR position);
 		void					SetOrientation( const DirectX::XMMATRIX& orientation );
+		void					SetOrientation(const DirectX::XMVECTOR& orientation);
 		void					SetScale(const float scale)
 		{
 			m_scale = scale;
@@ -42,6 +43,7 @@ namespace scene
 
 		DirectX::XMVECTORF32	m_position;
 		DirectX::XMMATRIX		m_orientation;
+		DirectX::XMVECTOR		m_orientationAsVector;
 		float					m_scale;
 	};
 } // namespace scene

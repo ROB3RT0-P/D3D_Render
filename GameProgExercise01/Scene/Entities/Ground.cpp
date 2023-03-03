@@ -8,7 +8,7 @@ namespace scene
     void Ground::Initialise()
     {
         Entity::Initialise();
-
+        SetScale(1.0f);
         Core* const core = Core::Get();
 
         const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
@@ -21,10 +21,10 @@ namespace scene
         static const Vertex s_vertexData[NumVertices] =
         {  
             // Triangle one - Green
-            { { -1.0f,   0.0f,  -1.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },  // Top
-            { { -1.0f,  0.0f,  5.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },  // Right
-            { { 4.0f, 0.0f,  -1.0f, 1.0f },{0.5f, 0.7f, 0.1f, 1.0f } },  // Left
-            { { 4.0f, 0.0f,  5.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } }, // Right
+            { { -6.0f,   0.0f,  -6.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },  // Top
+            { { -6.0f,  0.0f,  10.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } },  // Right
+            { { 10.0f, 0.0f,  -6.0f, 1.0f },{0.5f, 0.7f, 0.1f, 1.0f } },  // Left
+            { { 10.0f, 0.0f,  10.0f, 1.0f },{ 0.5f, 0.7f, 0.1f, 1.0f } }, // Right
         };
 
         D3D11_SUBRESOURCE_DATA initialData = {};
