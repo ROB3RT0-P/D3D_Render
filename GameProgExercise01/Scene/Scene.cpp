@@ -8,6 +8,7 @@
 #include "Scene\Camera.h"
 #include "Scene\Entities\Flower.h"
 #include "Scene\Entities\Bee.h"
+#include "Scene\Entities\Wasp.h"
 #include "Utils\Maths.h"
 
 using namespace DirectX;
@@ -16,26 +17,29 @@ namespace scene
 {
 
 	Scene::Scene() :
-		m_testObject1( nullptr ),
-		m_testObject2( nullptr ),
+		//m_testObject1( nullptr ),
+		//m_testObject2( nullptr ),
 		m_ground( nullptr ),
 		m_camera( nullptr ),
-		m_bee( nullptr )
+		m_bee( nullptr ),
+		m_wasp( nullptr )
 	{
-		m_testObject1 = new TestObject();
-		m_testObject2 = new TestObject();
+		//m_testObject1 = new TestObject();
+		//m_testObject2 = new TestObject();
 		m_ground = new Ground();
 		m_camera = new Camera();
 		m_bee = new Bee();
+		m_wasp = new Wasp();
 	}
 
 	Scene::~Scene()
 	{
-		delete m_testObject1;
-		delete m_testObject2;
+		//delete m_testObject1;
+		//delete m_testObject2;
 		delete m_ground;
 		delete m_camera;
 		delete m_bee;
+		delete m_wasp;
 	}
 
 	void Scene::Initialise()
@@ -50,17 +54,15 @@ namespace scene
 			}
 		}
 
-		for (UINT beeGridZ = 0; beeGridZ < BeeNum*300; ++beeGridZ)
+		//Create Bee list.
+		for (UINT beeGridZ = 0; beeGridZ < BeeNum; ++beeGridZ)
 		{
 			Bee* bee = new Bee();
 			m_beeList.push_back(bee);
 		}
 
-		XMVECTOR position;
-		XMMATRIX orientation;
-
 		// 1st test object
-		m_testObject1->Initialise();
+		//m_testObject1->Initialise();
 		m_ground->Initialise();
 
 		containers::List< Flower*>::iterator itor = m_flowerList.begin();
@@ -79,6 +81,7 @@ namespace scene
 			++itorBee;
 		}
 
+		/*
 		position = XMVectorSet( -2.0f, 0.0f, 0.0f, 1.0f );
 		m_testObject1->SetPosition( position );
 
@@ -89,10 +92,13 @@ namespace scene
 		m_testObject2->SetPosition( position );
 		orientation = XMMatrixRotationY( XM_PIDIV2 );
 		m_testObject2->SetOrientation( orientation );
+		*/
 
 		m_camera->Initialise();
 
 		m_bee->Initialise();
+
+		m_wasp->Initialise();
 	}
 
 	void Scene::Shutdown()
@@ -119,19 +125,21 @@ namespace scene
 		}
 		m_beeList.clear();
 
-		m_testObject2->Shutdown();
-		m_testObject1->Shutdown();
+		//m_testObject2->Shutdown();
+		//m_testObject1->Shutdown();
 		m_ground->Shutdown();
 		m_bee->Shutdown();
+		m_wasp->Shutdown();
 	}
 
 	void Scene::Update()
 	{
-		m_testObject1->Update();
-		m_testObject2->Update();
+		//m_testObject1->Update();
+		//m_testObject2->Update();
 		m_ground->Update();
 		m_camera->Update();
 		m_bee->Update();
+		m_wasp->Update();
 
 		containers::List< Flower*>::iterator itor = m_flowerList.begin();
 		while (itor != m_flowerList.end())
@@ -166,6 +174,15 @@ namespace scene
 			m_bee = new Bee();
 			m_bee->Initialise();
 		}
+
+		if (m_wasp->OutOfBounds())
+		{
+			m_wasp->Shutdown();
+			delete m_wasp;
+
+			m_wasp = new Wasp();
+			m_wasp->Initialise();
+		}
 	}
 
 	Flower* Scene::GetRandFlower()
@@ -187,12 +204,19 @@ namespace scene
 		return nullptr;
 	}
 
+	Wasp* Scene::GetRandWasp()
+	{
+				Wasp* wasp = wasp;
+				return wasp;
+	}
+
 	void Scene::Render()
 	{
 		//m_testObject1->Render();
 		//m_testObject2->Render();
 		m_ground->Render();
 		m_bee->Render();
+		m_wasp->Render();
 
 		containers::List< Flower*>::iterator itor = m_flowerList.begin();
 		while (itor != m_flowerList.end())
