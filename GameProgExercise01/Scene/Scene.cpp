@@ -53,6 +53,13 @@ namespace scene
 				m_flowerList.push_back(flower);
 			}
 		}
+	
+		//Create Wasp list.
+		for (UINT waspGridZ = 0; waspGridZ < WaspNum; ++waspGridZ)
+		{
+			Wasp* wasp = new Wasp();
+			m_waspList.push_back(wasp);
+		}
 
 		//Create Bee list.
 		for (UINT beeGridZ = 0; beeGridZ < BeeNum; ++beeGridZ)
@@ -61,12 +68,7 @@ namespace scene
 			m_beeList.push_back(bee);
 		}
 
-		//Create Wasp list.
-		for (UINT waspGridZ = 0; waspGridZ < WaspNum/10; ++waspGridZ)
-		{
-			Wasp* wasp = new Wasp();
-			m_waspList.push_back(wasp);
-		}
+		
 
 		// 1st test object
 		//m_testObject1->Initialise();
@@ -80,6 +82,14 @@ namespace scene
 			++itor;
 		}
 
+		containers::List<Wasp*>::iterator itorWasp = m_waspList.begin();
+		while (itorWasp != m_waspList.end())
+		{
+			Wasp* wasp = *itorWasp;
+			wasp->Initialise();
+			++itorWasp;
+		}
+
 		containers::List<Bee*>::iterator itorBee = m_beeList.begin();
 		while (itorBee != m_beeList.end())
 		{
@@ -88,14 +98,7 @@ namespace scene
 			++itorBee;
 		}
 
-		containers::List<Wasp*>::iterator itorWasp = m_waspList.begin();
-		while (itorWasp != m_waspList.end())
-		{
-			Wasp* wasp = *itorWasp;
-			wasp->Initialise();
-			++itorBee;
-		}
-
+	
 		/*
 		position = XMVectorSet( -2.0f, 0.0f, 0.0f, 1.0f );
 		m_testObject1->SetPosition( position );
