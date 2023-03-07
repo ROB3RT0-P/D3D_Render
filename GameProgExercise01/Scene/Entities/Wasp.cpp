@@ -4,7 +4,6 @@
 #include "Scene\Scene.h"
 #include "Scene\Entities\Flower.h"
 
-
 namespace scene
 {
     Wasp::Wasp() :
@@ -29,10 +28,7 @@ namespace scene
 
         m_speed = static_cast<float>((utils::Rand() % 10000) / 10000.0f); // Gives float 0.0 - 1.0f
         m_speed *= MaxSpeed;
-
         m_nectar = false;
-
-        //Tell bee to collect nectar
         m_state = Movement::SeekingNectar;
 
         const Core* const core = Core::Get();
@@ -47,8 +43,6 @@ namespace scene
         const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
 
         HRESULT hr = 0;
-
-        const float scale = 0.1f;
 
         auto device = deviceResources->GetD3DDevice();
 
@@ -90,7 +84,6 @@ namespace scene
         bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         bufferDesc.StructureByteStride = sizeof(Vertex);
 
-
         hr = device->CreateBuffer(&bufferDesc, &initialData,
             &m_vertexBuffer);
         ASSERT_HANDLE(hr);
@@ -100,7 +93,6 @@ namespace scene
     void Wasp::PosIter()
     {
         m_timeStep = utils::Timers::GetFrameTime();
-
         m_direction = DirectX::XMVectorSubtract(m_flowerPosition, m_position);
         m_normalisedDir = DirectX::XMVector3Normalize(m_direction);
         m_flowerVelocity = DirectX::XMVectorScale(m_normalisedDir, m_speed);
@@ -146,12 +138,9 @@ namespace scene
             m_timeStep = utils::Timers::GetFrameTime();
 
             float xBounds = 14.9f;
-
             DirectX::XMVECTOR curPos = m_position;
-
             float randZ = static_cast<float>(utils::Rand() % 5);
             DirectX::XMVECTOR leaveDir = DirectX::XMVECTOR{ 15.0f, 3.0f, randZ };
-
             DirectX::XMVECTOR direction = DirectX::XMVectorSubtract(leaveDir, m_position);
             DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(direction);
             DirectX::XMVECTOR BoundaryVelocity = DirectX::XMVectorScale(normalisedDir, m_speed * 80 * m_timeStep);
@@ -170,7 +159,6 @@ namespace scene
             m_state = Movement::SeekingNectar;
         }
     }
-
 
     void Wasp::Update()
     {
@@ -197,19 +185,13 @@ namespace scene
     void Wasp::Render()
     {
         Entity::Render();
-
         Core* const core = Core::Get();
-
         const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
-
         auto context = deviceResources->GetD3DDeviceContext();
-
         UINT strides = sizeof(Vertex);
         UINT offsets = 0;
         context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
         context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &strides, &offsets);
-
-        // Draw triangle.
         context->Draw(NumVertices, 0);
     }
 }

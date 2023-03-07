@@ -16,8 +16,9 @@ namespace scene
 	{
 	public:
 		static const UINT FlowerGridSize = 4;
-		static const UINT BeeNum = 20;
-		static const UINT WaspNum = BeeNum / 10;
+		static const UINT BeeNum = 40;
+		static const UINT WaspNum = 2;
+
 		Scene();
 		~Scene();
 
@@ -28,6 +29,7 @@ namespace scene
 
 		Flower* GetRandFlower();
 		Wasp* GetWasps();
+		//Wasp* GetWaspClosestToEntity(const Entity* const entity);
 
 		inline Camera*		GetCamera() const
 		{
@@ -35,13 +37,9 @@ namespace scene
 		}
 
 	private:
-		//TestObject*			m_testObject1;
-		//TestObject*			m_testObject2;
 		Ground*				m_ground;
 		Camera*				m_camera;
-		Bee*				m_bee;
-		Wasp*				m_wasp;
-		
+
 		containers::List<Bee*> m_beeList;
 		containers::List<Flower*> m_flowerList;
 		containers::List<Wasp*> m_waspList;

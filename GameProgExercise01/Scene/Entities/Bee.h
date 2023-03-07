@@ -7,8 +7,6 @@
 
 namespace scene
 {
-   
-
     class Bee  final : public Entity
     {
         enum class Movement

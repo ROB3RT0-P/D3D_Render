@@ -18,7 +18,6 @@ namespace scene
 
     Bee::~Bee()
     {
-        
     }
 
     void Bee::Initialise()
@@ -32,10 +31,7 @@ namespace scene
 
         m_speed = static_cast<float>((utils::Rand() % 10000) / 10000.0f); // Gives float 0.0 - 1.0f
         m_speed *= MaxSpeed / 100;
-
         m_nectar = false;
-        
-        //Tell bee to collect nectar
         m_state = Movement::SeekingNectar;
 
         const Core* const core = Core::Get();
@@ -53,8 +49,6 @@ namespace scene
         const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
 
         HRESULT hr = 0;
-
-        const float scale = 0.1f;
 
         auto device = deviceResources->GetD3DDevice();
 
@@ -77,38 +71,23 @@ namespace scene
             { { 1.0f, 1.0f,  1.0f, 1.0f },{ 1.0f, 1.0f, 0.0f, 1.0f } },     //13
 
             //Stripe
-            { { 1.01f, 0.0f,  0.4f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },     //1
-            { { 1.01f, 0.0f,  0.6f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },     //2
-            { { 1.01f, 1.01f,  0.4f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },     //3
-            { { 1.01f, 1.01f,  0.6f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },     //4
-            { { -0.01f, 1.01f,  0.4f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },     //5
-            { { -0.01f, 1.01f,  0.6f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },     //6
-            { { -0.01f, 0.0f,  0.4f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },     //7
-            { { -0.01f, 0.0f,  0.6f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } }      //8
-
-            //Stripe - other dir
-            /*
-            { { 0.4f, 0.0f,  -0.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },    //1
-            { { 0.6f, 0.0f,  -0.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },    //2
-            { { 0.4f, 1.01f, -0.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },    //3
-            { { 0.6f, 1.01f, -0.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },    //4
-            { { 0.4f, 1.01f,  1.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },    //5
-            { { 0.6f, 1.01f,  1.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },    //6
-            { { 0.4f, 0.0f,   1.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },    //7
-            { { 0.6f, 0.0f,   1.01f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } }     //8
-            */
+            { { 1.01f, 0.0f,  0.4f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },    //1
+            { { 1.01f, 0.0f,  0.6f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },    //2
+            { { 1.01f, 1.01f,  0.4f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },   //3
+            { { 1.01f, 1.01f,  0.6f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },   //4
+            { { -0.01f, 1.01f,  0.4f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },  //5
+            { { -0.01f, 1.01f,  0.6f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },  //6
+            { { -0.01f, 0.0f,  0.4f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } },   //7
+            { { -0.01f, 0.0f,  0.6f, 1.0f },{ 0.0f, 0.0f, 0.0f, 1.0f } }    //8
         };
 
         D3D11_SUBRESOURCE_DATA initialData = {};
         initialData.pSysMem = s_vertexData;
-
         D3D11_BUFFER_DESC bufferDesc = {};
         bufferDesc.ByteWidth = sizeof(s_vertexData);
         bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
         bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         bufferDesc.StructureByteStride = sizeof(Vertex);
-
-
         hr = device->CreateBuffer(&bufferDesc, &initialData,
             &m_vertexBuffer);
         ASSERT_HANDLE(hr);
@@ -124,6 +103,7 @@ namespace scene
 
         Wasp* const wasp = scene->GetWasps();
         m_waspPosition = wasp->GetPosition();
+
         //Check
         DirectX::XMVECTOR checkPos = m_position - m_flowerPosition;
         DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(checkPos);
@@ -132,9 +112,7 @@ namespace scene
         {
             m_nectar = true;
             m_state = Movement::SeekingHome;
-        }
-       
-        
+        } 
     }
 
     void Bee::SeekingNectar()
@@ -172,11 +150,10 @@ namespace scene
             m_state = Movement::SeekingHome;
         }
 
-
         DirectX::XMVECTOR vecToWasp = m_waspPosition - m_position;
         DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(vecToWasp);
         float distanceAsFloat = *checkPosLen.m128_f32;
-        if (distanceAsFloat < 3.0f)
+        if (distanceAsFloat < 2.0f)
         {
             m_state = Movement::AvoidingWasp;
         }
@@ -184,7 +161,7 @@ namespace scene
 
     void Bee::AvoidingWasp()
     {
-       /* m_timeStep = utils::Timers::GetFrameTime();
+        m_timeStep = utils::Timers::GetFrameTime();
         DirectX::XMVECTOR vecToWasp = m_position - m_waspPosition;
         DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(vecToWasp);
         XMVECTOR vecFromWasp = XMVectorNegate(vecToWasp);//
@@ -195,7 +172,7 @@ namespace scene
         newPos.v = DirectX::XMVectorScale(waspVelocity, m_timeStep);
         newPos.v += m_position;
 
-        DirectX::XMVECTOR lerpDir = DirectX::XMVectorLerp(m_orientationAsVector, dirFromWasp, 0.12f * m_timeStep);
+        DirectX::XMVECTOR lerpDir = DirectX::XMVectorLerp(m_orientationAsVector, dirFromWasp, 10.0f * m_timeStep);
         SetOrientation(lerpDir);
         SetPosition(newPos + (DirectX::XMVectorScale(lerpDir, m_speed)));
 
@@ -203,21 +180,14 @@ namespace scene
         if (distanceAsFloat > 10.0f)
         {
             m_state = Movement::SeekingNectar;
-        }*/
-        SetPosition(m_position);
-
+        }
     }
 
     void Bee::SeekingHome()
     {
         if (m_nectar) {
-
-            m_timeStep = utils::Timers::GetFrameTime();
-
             float xBounds = 14.9f;
-
             DirectX::XMVECTOR curPos = m_position;
-
             float randZ = static_cast<float>(utils::Rand() % 5);
             DirectX::XMVECTOR leaveDir = DirectX::XMVECTOR{ 15.0f, 3.0f, randZ };
 
@@ -252,10 +222,7 @@ namespace scene
 
     void Bee::Update()
     {
-        const Core* const core = Core::Get();
-        Scene* scene = core->GetScene();
-        Wasp* const wasp = scene->GetWasps();
-        m_waspPosition = wasp->GetPosition();
+        PosIter();
 
         switch (m_state)
         {
@@ -271,8 +238,6 @@ namespace scene
         default:
             break;
         }
-
-        PosIter();
     }
     
     bool Bee::OutOfBounds()
@@ -283,19 +248,13 @@ namespace scene
     void Bee::Render()
     {
         Entity::Render();
-
         Core* const core = Core::Get();
-
         const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
-
         auto context = deviceResources->GetD3DDeviceContext();
-
         UINT strides = sizeof(Vertex);
         UINT offsets = 0;
         context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
         context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &strides, &offsets);
-
-        // Draw triangle.
         context->Draw(NumVertices, 0);
     }
 }

@@ -40,10 +40,11 @@ namespace scene
         bool                m_nectar;
         bool                m_outOfBounds;
 
+        static const UINT m_waitMillisec = 100000;
+
         DirectX::XMVECTOR   m_direction;
         DirectX::XMVECTOR   m_normalisedDir;
         DirectX::XMVECTOR   m_flowerVelocity;
-
         DirectX::XMVECTOR   m_checkPos;
         DirectX::XMVECTOR   m_checkPosLen;
 
