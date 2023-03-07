@@ -20,16 +20,16 @@ namespace scene
 		//m_testObject1( nullptr ),
 		//m_testObject2( nullptr ),
 		m_ground( nullptr ),
-		m_camera( nullptr ),
-		m_bee( nullptr ),
-		m_wasp( nullptr )
+		m_camera( nullptr )
+		//m_bee( nullptr ),
+		//m_wasp( nullptr )
 	{
 		//m_testObject1 = new TestObject();
 		//m_testObject2 = new TestObject();
 		m_ground = new Ground();
 		m_camera = new Camera();
-		m_bee = new Bee();
-		m_wasp = new Wasp();
+		//m_bee = new Bee();
+		//m_wasp = new Wasp();
 	}
 
 	Scene::~Scene()
@@ -38,8 +38,8 @@ namespace scene
 		//delete m_testObject2;
 		delete m_ground;
 		delete m_camera;
-		delete m_bee;
-		delete m_wasp;
+		//delete m_bee;
+		//delete m_wasp;
 	}
 
 	void Scene::Initialise()
@@ -61,6 +61,13 @@ namespace scene
 			m_beeList.push_back(bee);
 		}
 
+		//Create Wasp list.
+		for (UINT waspGridZ = 0; waspGridZ < WaspNum/10; ++waspGridZ)
+		{
+			Wasp* wasp = new Wasp();
+			m_waspList.push_back(wasp);
+		}
+
 		// 1st test object
 		//m_testObject1->Initialise();
 		m_ground->Initialise();
@@ -78,6 +85,14 @@ namespace scene
 		{
 			Bee* bee = *itorBee;
 			bee->Initialise();
+			++itorBee;
+		}
+
+		containers::List<Wasp*>::iterator itorWasp = m_waspList.begin();
+		while (itorWasp != m_waspList.end())
+		{
+			Wasp* wasp = *itorWasp;
+			wasp->Initialise();
 			++itorBee;
 		}
 
@@ -125,11 +140,20 @@ namespace scene
 		}
 		m_beeList.clear();
 
+		containers::List<Wasp*>::iterator itorWasp = m_waspList.begin();
+		while (itorWasp != m_waspList.end())
+		{
+			Wasp* waspToDelete = *itorWasp;
+			delete waspToDelete;
+			++itorWasp;
+		}
+		m_waspList.clear();
+
 		//m_testObject2->Shutdown();
 		//m_testObject1->Shutdown();
 		m_ground->Shutdown();
-		m_bee->Shutdown();
-		m_wasp->Shutdown();
+		//m_bee->Shutdown();
+		//m_wasp->Shutdown();
 	}
 
 	void Scene::Update()
@@ -138,8 +162,8 @@ namespace scene
 		//m_testObject2->Update();
 		m_ground->Update();
 		m_camera->Update();
-		m_bee->Update();
-		m_wasp->Update();
+		//m_bee->Update();
+		//m_wasp->Update();
 
 		containers::List< Flower*>::iterator itor = m_flowerList.begin();
 		while (itor != m_flowerList.end())
@@ -175,6 +199,23 @@ namespace scene
 			m_bee->Initialise();
 		}
 
+		containers::List<Wasp*>::iterator itorWasp = m_waspList.begin();
+		while (itorWasp != m_waspList.end())
+		{
+			Wasp* wasp = *itorWasp;
+			wasp->Update();
+			++itorWasp;
+
+			if (wasp->OutOfBounds())
+			{
+				wasp->Shutdown();
+				delete wasp;
+
+				wasp = new Wasp();
+				wasp->Initialise();
+			}
+		}
+
 		if (m_wasp->OutOfBounds())
 		{
 			m_wasp->Shutdown();
@@ -204,10 +245,16 @@ namespace scene
 		return nullptr;
 	}
 
-	Wasp* Scene::GetRandWasp()
+	Wasp* Scene::GetWasps()
 	{
-				Wasp* wasp = wasp;
-				return wasp;
+		containers::List< Wasp*>::iterator itorWasp = m_waspList.begin();
+		while (itorWasp != m_waspList.end())
+		{
+			Wasp* wasp = *itorWasp;
+			return wasp;
+			++itorWasp;
+		}
+		return nullptr;
 	}
 
 	void Scene::Render()
@@ -232,6 +279,14 @@ namespace scene
 			Bee* bee = *itorBee;
 			bee->Render();
 			++itorBee;
+		}
+
+		containers::List<Wasp*>::iterator itorWasp = m_waspList.begin();
+		while (itorWasp != m_waspList.end())
+		{
+			Wasp* wasp = *itorWasp;
+			wasp->Render();
+			++itorWasp;
 		}
 	}
 } // namespace scene

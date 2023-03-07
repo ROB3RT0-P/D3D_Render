@@ -43,7 +43,7 @@ namespace scene
         Flower* const flower = scene->GetRandFlower();
         m_flowerPosition = flower->GetPosition();
 
-        Wasp* const wasp = scene->GetRandWasp();
+        Wasp* const wasp = scene->GetWasps();
         m_waspPosition = wasp->GetPosition();
 
         float zPos = static_cast<float>(utils::Rand() % 5);
@@ -119,7 +119,11 @@ namespace scene
     void Bee::PosIter()
     {
         m_timeStep = utils::Timers::GetFrameTime();
+        const Core* const core = Core::Get();
+        Scene* scene = core->GetScene();
 
+        Wasp* const wasp = scene->GetWasps();
+        m_waspPosition = wasp->GetPosition();
         //Check
         DirectX::XMVECTOR checkPos = m_position - m_flowerPosition;
         DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(checkPos);
@@ -180,7 +184,7 @@ namespace scene
 
     void Bee::AvoidingWasp()
     {
-        m_timeStep = utils::Timers::GetFrameTime();
+       /* m_timeStep = utils::Timers::GetFrameTime();
         DirectX::XMVECTOR vecToWasp = m_position - m_waspPosition;
         DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(vecToWasp);
         XMVECTOR vecFromWasp = XMVectorNegate(vecToWasp);//
@@ -199,7 +203,9 @@ namespace scene
         if (distanceAsFloat > 10.0f)
         {
             m_state = Movement::SeekingNectar;
-        }
+        }*/
+        SetPosition(m_position);
+
     }
 
     void Bee::SeekingHome()
@@ -234,14 +240,13 @@ namespace scene
             m_state = Movement::SeekingNectar;
         }
 
-        /*
-  if (bee < dist to wasp)
-  {
-      m_state = AvoidingWasp;
-  }else
-  {
-
-  }*/
+        DirectX::XMVECTOR vecToWasp = m_waspPosition - m_position;
+        DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(vecToWasp);
+        float distanceAsFloat = *checkPosLen.m128_f32;
+        if (distanceAsFloat < 3.0f)
+        {
+            m_state = Movement::AvoidingWasp;
+        }
     }
 
 
@@ -249,7 +254,7 @@ namespace scene
     {
         const Core* const core = Core::Get();
         Scene* scene = core->GetScene();
-        Wasp* const wasp = scene->GetRandWasp();
+        Wasp* const wasp = scene->GetWasps();
         m_waspPosition = wasp->GetPosition();
 
         switch (m_state)
