@@ -87,6 +87,9 @@
     <ClCompile Include="Scene\Entities\Wasp.cpp">
       <Filter>Source Files\Scene\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\Entities\FlyingInsect.cpp">
+      <Filter>Source Files\Scene\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -153,6 +156,9 @@
       <Filter>Source Files\Scene\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Scene\Entities\Wasp.h">
+      <Filter>Source Files\Scene\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Entities\FlyingInsect.h">
       <Filter>Source Files\Scene\Entities</Filter>
     </ClInclude>
   </ItemGroup>

@@ -16,7 +16,7 @@ namespace scene
 
     Flower::Flower(const UINT x, const UINT z)
     {
-        SetPosition(DirectX::XMVECTOR{ (float)x, 2.0f, (float)z });
+        SetPosition(DirectX::XMVECTOR{ (float)x*1.5f, 2.0f, (float)z*1.5f });
     }
 
     void Flower::Initialise()
@@ -99,8 +99,7 @@ namespace scene
         // Create petals in a loop
         for (; x < (NumPetals * 3) + 9; ++x)
         {
-
-                //Petals
+            //Petals
             allVertices[x] =
             { { 0.0f, PetalHeight - 2.0f,  0.0f, 1.0f},{1.0f, 0.0f, 1.0f, 1.0f}};
             ++x;

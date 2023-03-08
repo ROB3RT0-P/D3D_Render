@@ -227,6 +227,7 @@
     <ClCompile Include="Scene\Camera.cpp" />
     <ClCompile Include="Scene\Entities\Bee.cpp" />
     <ClCompile Include="Scene\Entities\Flower.cpp" />
+    <ClCompile Include="Scene\Entities\FlyingInsect.cpp" />
     <ClCompile Include="Scene\Entities\Ground.cpp" />
     <ClCompile Include="Scene\Entities\TestObject.cpp" />
     <ClCompile Include="Scene\Entities\Wasp.cpp" />
@@ -255,6 +256,7 @@
     <ClInclude Include="Scene\Camera.h" />
     <ClInclude Include="Scene\Entities\Bee.h" />
     <ClInclude Include="Scene\Entities\Flower.h" />
+    <ClInclude Include="Scene\Entities\FlyingInsect.h" />
     <ClInclude Include="Scene\Entities\Ground.h" />
     <ClInclude Include="Scene\Entities\TestObject.h" />
     <ClInclude Include="Scene\Entities\Wasp.h" />

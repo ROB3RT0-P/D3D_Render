@@ -10,14 +10,15 @@ namespace scene
 	class Flower;
 	class Bee;
 	class Wasp;
+	class Entity;
 
 	// Object containing all the entities and related objects in the scene
 	class Scene
 	{
 	public:
 		static const UINT FlowerGridSize = 4;
-		static const UINT BeeNum = 40;
-		static const UINT WaspNum = 2;
+		static const UINT BeeNum = 10;
+		static const UINT WaspNum = 1;
 
 		Scene();
 		~Scene();
@@ -26,10 +27,12 @@ namespace scene
 		void				Shutdown();
 		void				Update();
 		void				Render();
+		void				Sleep();
 
 		Flower* GetRandFlower();
 		Wasp* GetWasps();
-		//Wasp* GetWaspClosestToEntity(const Entity* const entity);
+		Wasp* GetWaspClosestToEntity(const Entity* const entity);
+		
 
 		inline Camera*		GetCamera() const
 		{
@@ -37,6 +40,9 @@ namespace scene
 		}
 
 	private:
+		float				m_beeTimer;
+		float				m_waspTimer;
+
 		Ground*				m_ground;
 		Camera*				m_camera;
 

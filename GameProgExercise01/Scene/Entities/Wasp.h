@@ -34,19 +34,20 @@ namespace scene
 
         DirectX::XMVECTOR   Velocity = DirectX::XMVECTOR{ 4.0f, 0.0f, 0.0f };
         DirectX::XMVECTOR   m_flowerPosition;
-
-        float               m_speed;
-        float               m_timeStep;
-        bool                m_nectar;
-        bool                m_outOfBounds;
-
-        static const UINT m_waitMillisec = 100000;
-
         DirectX::XMVECTOR   m_direction;
         DirectX::XMVECTOR   m_normalisedDir;
         DirectX::XMVECTOR   m_flowerVelocity;
         DirectX::XMVECTOR   m_checkPos;
         DirectX::XMVECTOR   m_checkPosLen;
+
+        float               m_speed;
+        float               m_timeStep;
+        bool                m_nectar;
+        bool                m_outOfBounds;
+        float               m_thetaPos;
+
+        static const UINT m_waitMillisec = 100000;
+
 
         static const UINT   NumVertices = 21;
 

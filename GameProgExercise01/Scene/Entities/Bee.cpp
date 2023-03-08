@@ -9,6 +9,8 @@ using namespace DirectX;
 
 namespace scene
 {
+    const float Bee::Radius = 15.0f;
+
     Bee::Bee() :
         m_outOfBounds( false )
     {
@@ -29,8 +31,9 @@ namespace scene
         DirectX::XMVECTOR beeOrientation = DirectX::XMVECTOR{ 1.0f, 0.0f, 1.0f };
         SetOrientation( beeOrientation );
 
+        m_thetaPos = static_cast<float>((utils::Rand() % 10000) / 10000.0f) * DirectX::XM_2PI;; // Gives float 0.0 - 1.0f
         m_speed = static_cast<float>((utils::Rand() % 10000) / 10000.0f); // Gives float 0.0 - 1.0f
-        m_speed *= MaxSpeed / 100;
+        m_speed *= MaxSpeed/4;
         m_nectar = false;
         m_state = Movement::SeekingNectar;
 
@@ -39,11 +42,9 @@ namespace scene
         Flower* const flower = scene->GetRandFlower();
         m_flowerPosition = flower->GetPosition();
 
-        Wasp* const wasp = scene->GetWasps();
-        m_waspPosition = wasp->GetPosition();
-
-        float zPos = static_cast<float>(utils::Rand() % 5);
-        DirectX::XMVECTOR startPos = DirectX::XMVECTOR{ -15.0f, 3.0f, zPos };
+        float thetaPos = static_cast<float>((utils::Rand() % 10000) / 10000.0f); // Gives float 0.0 - 1.0f
+        thetaPos = thetaPos * XM_2PI;
+        DirectX::XMVECTOR startPos = DirectX::XMVECTOR{ XMScalarSin(thetaPos) * Radius, 3.0f, XMScalarCos(thetaPos) * Radius };
         SetPosition( startPos );
 
         const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
@@ -88,12 +89,9 @@ namespace scene
         bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
         bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         bufferDesc.StructureByteStride = sizeof(Vertex);
-        hr = device->CreateBuffer(&bufferDesc, &initialData,
-            &m_vertexBuffer);
+        hr = device->CreateBuffer(&bufferDesc, &initialData, &m_vertexBuffer);
         ASSERT_HANDLE(hr);
     }
-
-  
     
     void Bee::PosIter()
     {
@@ -101,8 +99,10 @@ namespace scene
         const Core* const core = Core::Get();
         Scene* scene = core->GetScene();
 
+        /*  
         Wasp* const wasp = scene->GetWasps();
         m_waspPosition = wasp->GetPosition();
+        */
 
         //Check
         DirectX::XMVECTOR checkPos = m_position - m_flowerPosition;
@@ -150,12 +150,21 @@ namespace scene
             m_state = Movement::SeekingHome;
         }
 
-        DirectX::XMVECTOR vecToWasp = m_waspPosition - m_position;
-        DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(vecToWasp);
-        float distanceAsFloat = *checkPosLen.m128_f32;
-        if (distanceAsFloat < 2.0f)
+        const Core* const core = Core::Get();
+        Scene* scene = core->GetScene();
+
+        Wasp* const closestWasp = scene->GetWaspClosestToEntity(this);
+        if (closestWasp != nullptr)
         {
-            m_state = Movement::AvoidingWasp;
+            XMVECTOR closestWaspPosition = closestWasp->GetPosition();
+
+            DirectX::XMVECTOR vecToWasp = closestWaspPosition - m_position;
+            DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(vecToWasp);
+            float distanceAsFloat = *checkPosLen.m128_f32;
+            if (distanceAsFloat < 2.0f)
+            {
+                m_state = Movement::AvoidingWasp;
+            }
         }
     }
 
@@ -186,21 +195,29 @@ namespace scene
     void Bee::SeekingHome()
     {
         if (m_nectar) {
-            float xBounds = 14.9f;
-            DirectX::XMVECTOR curPos = m_position;
-            float randZ = static_cast<float>(utils::Rand() % 5);
-            DirectX::XMVECTOR leaveDir = DirectX::XMVECTOR{ 15.0f, 3.0f, randZ };
 
-            DirectX::XMVECTOR direction = DirectX::XMVectorSubtract(leaveDir, m_position);
-            DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(direction);
-            DirectX::XMVECTOR BoundaryVelocity = DirectX::XMVectorScale(normalisedDir, m_speed * 80);
+            m_timeStep = utils::Timers::GetFrameTime();
+            float Radius = 150.0f;
 
-            DirectX::XMVECTOR newPos = DirectX::XMVectorScale(BoundaryVelocity, m_timeStep);
-            m_position.v = DirectX::XMVectorAdd(m_position.v, newPos);
+            DirectX::XMVECTOR leavePos = DirectX::XMVECTOR{ DirectX::XMScalarSin(m_thetaPos) * Radius, 3.0f, DirectX::XMScalarCos(m_thetaPos) * Radius };
+
+            DirectX::XMVECTOR directionToExitPoint = DirectX::XMVectorSubtract(leavePos, m_position);
+            DirectX::XMVECTOR distanceToExitPointVec = DirectX::XMVector3LengthEst(directionToExitPoint);
+            float distanceToExitPoint = *distanceToExitPointVec.m128_f32;
+           // ASSERT(distanceToExitPoint > 0.0001f, "Tiny distance\n");
+            DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(directionToExitPoint);
+            DirectX::XMVECTOR desiredVelocity = DirectX::XMVectorScale(normalisedDir, m_speed * 80);
+
+            DirectX::XMVECTOR delta = DirectX::XMVectorScale(desiredVelocity, m_timeStep);
+            m_position.v = DirectX::XMVectorAdd(m_position.v, delta);
 
             SetPosition(m_position.v);
 
-            if (m_position.f[0] >= xBounds)
+
+            ///DirectX::XMVECTOR distanceOriginToExitPointVec = DirectX::XMVector3LengthEst(leavePos);
+            //float distanceOriginToExitPoint = *distanceOriginToExitPointVec.m128_f32;
+
+            if (distanceToExitPoint <= 0.1f)
             {
                 m_outOfBounds = true;
             }
@@ -210,12 +227,21 @@ namespace scene
             m_state = Movement::SeekingNectar;
         }
 
-        DirectX::XMVECTOR vecToWasp = m_waspPosition - m_position;
-        DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(vecToWasp);
-        float distanceAsFloat = *checkPosLen.m128_f32;
-        if (distanceAsFloat < 3.0f)
+        const Core* const core = Core::Get();
+        Scene* scene = core->GetScene();
+
+        Wasp* const closestWasp = scene->GetWaspClosestToEntity(this);
+        if (closestWasp != nullptr)
         {
-            m_state = Movement::AvoidingWasp;
+            XMVECTOR closestWaspPosition = closestWasp->GetPosition();
+
+            DirectX::XMVECTOR vecToWasp = closestWaspPosition - m_position;
+            DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(vecToWasp);
+            float distanceAsFloat = *checkPosLen.m128_f32;
+            if (distanceAsFloat < 2.0f)
+            {
+                m_state = Movement::AvoidingWasp;
+            }
         }
     }
 

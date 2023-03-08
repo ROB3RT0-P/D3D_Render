@@ -1,13 +1,13 @@
 #pragma once
 
 #include "DX\DeviceResources.h"
-#include "Scene\Entity.h"
+#include "Scene\Entities\FlyingInsect.h"
 
 
 
 namespace scene
 {
-    class Bee  final : public Entity
+    class Bee  final : public FlyingInsect
     {
         enum class Movement
         {
@@ -44,6 +44,8 @@ namespace scene
         bool m_outOfBounds;
 
         static const UINT NumVertices = 21;
+        static const float Radius;
+        float m_thetaPos;
 
         Movement            m_state;
     };

@@ -10,6 +10,7 @@
 #include "Scene\Entities\Bee.h"
 #include "Scene\Entities\Wasp.h"
 #include "Utils\Maths.h"
+#include "Utils\Timers.h"
 
 using namespace DirectX;
 
@@ -32,7 +33,9 @@ namespace scene
 	void Scene::Initialise()
 	{
 		m_camera->Initialise();
-		
+		m_beeTimer = 5.0f;
+		m_waspTimer = 15.0f;
+
 		//Create Flower List.
 		for (UINT gridX = 0; gridX < FlowerGridSize; ++gridX)
 		{
@@ -50,12 +53,6 @@ namespace scene
 			m_waspList.push_back(wasp);
 		}
 
-		//Create Bee list.
-		for (UINT beeGridZ = 0; beeGridZ < BeeNum; ++beeGridZ)
-		{
-			Bee* bee = new Bee();
-			m_beeList.push_back(bee);
-		}
 
 		m_ground->Initialise();
 
@@ -118,9 +115,15 @@ namespace scene
 
 	void Scene::Update()
 	{
+		float timeStep = utils::Timers::GetFrameTime();
+		
+		m_beeTimer -= timeStep;
+		m_waspTimer -= timeStep;
+
 		m_ground->Update();
 		m_camera->Update();
 
+		// Update all flowers
 		containers::List< Flower*>::iterator itor = m_flowerList.begin();
 		while (itor != m_flowerList.end())
 		{
@@ -128,39 +131,69 @@ namespace scene
 			flower->Update();
 			++itor;
 		}
-
+		
+		containers::List<Bee*>::iterator beeToDeleteItor = nullptr;
 		containers::List<Bee*>::iterator itorBee = m_beeList.begin();
 		while (itorBee != m_beeList.end())
 		{
 			Bee* bee = *itorBee;
 			bee->Update();
-			++itorBee;
 
 			if (bee->OutOfBounds())
 			{
-				bee->Shutdown();
-				delete bee;
-				
-				bee = new Bee();
-				bee->Initialise();
+				beeToDeleteItor = itorBee;
 			}
+			++itorBee;
 		}
 
+		if (beeToDeleteItor != nullptr)
+		{
+			Bee* beeToDel = *beeToDeleteItor;
+			beeToDel->Shutdown();
+			delete beeToDel;
+
+			m_beeList.erase(beeToDeleteItor);
+		}
+
+		bool needNewWasp = false;
+		containers::List<Wasp*>::iterator waspToDeleteItor = nullptr;
 		containers::List<Wasp*>::iterator itorWasp = m_waspList.begin();
 		while (itorWasp != m_waspList.end())
 		{
 			Wasp* wasp = *itorWasp;
 			wasp->Update();
-			++itorWasp;
 
 			if (wasp->OutOfBounds())
 			{
-				wasp->Shutdown();
-				delete wasp;
-
-				wasp = new Wasp();
-				wasp->Initialise();
+				waspToDeleteItor = itorWasp;
 			}
+			++itorWasp;
+		}
+
+		if (waspToDeleteItor != nullptr)
+		{
+			Wasp* waspToDel = *waspToDeleteItor;
+			waspToDel->Shutdown();
+			delete waspToDel;
+
+			m_waspList.erase(waspToDeleteItor);
+		}
+
+		if (m_beeTimer < 0.1f)
+		{
+			// Spawn a new bee
+			Bee* bee = new Bee();
+			bee->Initialise();
+			m_beeList.push_back(bee);
+			m_beeTimer = 5.0f;
+		}
+
+		if (m_waspTimer < 0.1f)
+		{
+			Wasp* wasp = new Wasp();
+			wasp->Initialise();
+			m_waspList.push_back(wasp);
+			m_waspTimer = 15.0f;
 		}
 	}
 
@@ -182,26 +215,38 @@ namespace scene
 		}
 		return nullptr;
 	}
-
-	Wasp* Scene::GetWasps()
+	
+	Wasp* Scene::GetWaspClosestToEntity(const Entity* const entity)
 	{
+		Wasp* closestWasp = nullptr;
+		float closestDistance = FLT_MAX;
+
+		XMVECTOR entityPostion = entity->GetPosition();
+
 		containers::List< Wasp*>::iterator itorWasp = m_waspList.begin();
 		while (itorWasp != m_waspList.end())
 		{
-			Wasp* wasp = *itorWasp;
-			return wasp;
+			Wasp* const wasp = *itorWasp;
+
+			// Get the distance from the passed entity to the wasp
+			XMVECTOR waspPosition = wasp->GetPosition();
+
+			XMVECTOR distanceAsVector = entityPostion - waspPosition;
+
+			XMVECTOR distanceAsFloat = XMVector3Length( distanceAsVector );
+
+			// Test to see if this wasp is closer than any others checked so far
+			if (*distanceAsFloat.m128_f32 < closestDistance)
+			{
+				// Store the closest wasp
+				closestDistance = *distanceAsFloat.m128_f32;
+				closestWasp = wasp;
+			}
 			++itorWasp;
 		}
-		return nullptr;
-	}
 
-	/*
-	Wasp* Scene::GetWaspClosestToEntity(const Entity* const entity)
-	{
-		Wasp* wasp = ;
-		return wasp;
+		return closestWasp;
 	}
-	*/
 
 	void Scene::Render()
 	{

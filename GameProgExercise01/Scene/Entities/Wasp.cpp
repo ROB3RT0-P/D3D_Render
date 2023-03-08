@@ -20,14 +20,16 @@ namespace scene
     void Wasp::Initialise()
     {
         static const float MaxSpeed = 4.0f;
+        
 
         Entity::Initialise();
         SetScale(0.2f);
         DirectX::XMVECTOR beeOrientation = DirectX::XMVECTOR{ 1.0f, 0.0f, 1.0f };
         SetOrientation(beeOrientation);
 
+        m_thetaPos = static_cast<float>((utils::Rand() % 10000) / 10000.0f) * DirectX::XM_2PI;; // Gives float 0.0 - 1.0f
         m_speed = static_cast<float>((utils::Rand() % 10000) / 10000.0f); // Gives float 0.0 - 1.0f
-        m_speed *= MaxSpeed;
+        m_speed *= MaxSpeed*2;
         m_nectar = false;
         m_state = Movement::SeekingNectar;
 
@@ -136,21 +138,27 @@ namespace scene
         if (m_nectar) {
 
             m_timeStep = utils::Timers::GetFrameTime();
+            float Radius = 15.0f;
+            
+            DirectX::XMVECTOR leavePos = DirectX::XMVECTOR{ DirectX::XMScalarSin(m_thetaPos) * Radius, 3.0f, DirectX::XMScalarCos(m_thetaPos) * Radius };
 
-            float xBounds = 14.9f;
-            DirectX::XMVECTOR curPos = m_position;
-            float randZ = static_cast<float>(utils::Rand() % 5);
-            DirectX::XMVECTOR leaveDir = DirectX::XMVECTOR{ 15.0f, 3.0f, randZ };
-            DirectX::XMVECTOR direction = DirectX::XMVectorSubtract(leaveDir, m_position);
-            DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(direction);
-            DirectX::XMVECTOR BoundaryVelocity = DirectX::XMVectorScale(normalisedDir, m_speed * 80 * m_timeStep);
+            DirectX::XMVECTOR directionToExitPoint = DirectX::XMVectorSubtract(leavePos, m_position);
+            DirectX::XMVECTOR distanceToExitPointVec = DirectX::XMVector3LengthEst(directionToExitPoint);
+            float distanceToExitPoint = *distanceToExitPointVec.m128_f32;
+            ASSERT(distanceToExitPoint > 0.0001f, "Tiny distance\n");
+            DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(directionToExitPoint);
+            DirectX::XMVECTOR desiredVelocity = DirectX::XMVectorScale(normalisedDir, m_speed);
 
-            DirectX::XMVECTOR newPos = DirectX::XMVectorScale(BoundaryVelocity, m_timeStep);
-            m_position.v = DirectX::XMVectorAdd(m_position.v, newPos);
+            DirectX::XMVECTOR delta = DirectX::XMVectorScale(desiredVelocity, m_timeStep);
+            m_position.v = DirectX::XMVectorAdd(m_position.v, delta);
 
             SetPosition(m_position.v);
 
-            if (m_position.f[0] >= xBounds)
+
+            ///DirectX::XMVECTOR distanceOriginToExitPointVec = DirectX::XMVector3LengthEst(leavePos);
+            //float distanceOriginToExitPoint = *distanceOriginToExitPointVec.m128_f32;
+
+            if (distanceToExitPoint <= 0.1f)
             {
                 m_outOfBounds = true;
             }

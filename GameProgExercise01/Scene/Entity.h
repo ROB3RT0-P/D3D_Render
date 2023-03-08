@@ -21,10 +21,10 @@ namespace scene
 		virtual void					Update();
 		virtual void					Render();
 
-		void					SetPosition(const DirectX::XMVECTOR position);
-		void					SetOrientation( const DirectX::XMMATRIX& orientation );
-		void					SetOrientation(const DirectX::XMVECTOR& orientation);
-		void					SetScale(const float scale)
+		void							SetPosition(const DirectX::XMVECTOR position);
+		void							SetOrientation( const DirectX::XMMATRIX& orientation );
+		void							SetOrientation(const DirectX::XMVECTOR& orientation);
+		void							SetScale(const float scale)
 		{
 			m_scale = scale;
 		}
