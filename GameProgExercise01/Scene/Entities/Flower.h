@@ -22,5 +22,8 @@ namespace scene
     private:
         virtual void OnDeviceLost() {}
         virtual void OnDeviceRestored() {}
+
+        static const float Spacing;
+        static const float FlowerScale;
     };
 }

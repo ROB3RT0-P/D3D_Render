@@ -17,8 +17,8 @@ namespace scene
 	{
 	public:
 		static const UINT FlowerGridSize = 4;
-		static const UINT BeeNum = 10;
-		static const UINT WaspNum = 1;
+		static const UINT BeeNum = 10;  // delete this
+		static const UINT WaspNum = 1; 
 
 		Scene();
 		~Scene();
@@ -29,7 +29,7 @@ namespace scene
 		void				Render();
 		void				Sleep();
 
-		Flower* GetRandFlower();
+		Flower* GetRandFlower(); // aline these
 		Wasp* GetWasps();
 		Wasp* GetWaspClosestToEntity(const Entity* const entity);
 		

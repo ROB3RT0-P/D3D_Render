@@ -48,17 +48,12 @@ namespace scene
         Entity::Render();
 
         Core* const core = Core::Get();
-
         const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
-
         auto context = deviceResources->GetD3DDeviceContext();
-
         UINT strides = sizeof(Vertex);
         UINT offsets = 0;
         context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
         context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &strides, &offsets);
-
-        // Draw triangle.
         context->Draw(NumVertices, 0);
     }
 }

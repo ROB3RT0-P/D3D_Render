@@ -9,7 +9,10 @@ namespace DX
 
 View::View( DeviceResources* deviceResources ) :
 	m_deviceResources( deviceResources ),
-	m_constantBuffer( nullptr )
+	m_constantBuffer( nullptr ),
+	m_worldMatrix{},
+	m_viewMatrix{},
+	m_projectionMatrix{}
 {
 }
 

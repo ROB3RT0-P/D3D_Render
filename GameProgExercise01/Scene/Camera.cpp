@@ -15,13 +15,13 @@ namespace scene
 {
 	Camera::Camera():m_yAngle(XM_PI * 0.5f)
 	{
-		m_Centre = XMVectorZero();
-		m_Offset = XMVectorZero();
+		m_centre = XMVectorZero();
+		m_offset = XMVectorZero();
 	}
 
 	void Camera::Initialise()
 	{
-		m_Offset = XMVectorSet(10.0f, 5.0f, 0.0f, 1.0f);
+		m_offset = XMVectorSet(10.0f, 5.0f, 0.0f, 1.0f);
 	}
 
 	void Camera::Update()
@@ -30,7 +30,7 @@ namespace scene
 		const XMMATRIX rotationY = XMMatrixRotationY(m_yAngle);
 
 		// Rotate our offset (offset is along the x-axis)
-		const XMVECTOR rotatedOffset = XMVector3Transform(m_Offset, rotationY);
+		const XMVECTOR rotatedOffset = XMVector3Transform(m_offset, rotationY);
 
 		//XMVECTOR origin = XMVectorZero();//Change origin
 		XMVECTOR origin = XMVECTOR{ 1.5f, 0.0f, 2.0f };

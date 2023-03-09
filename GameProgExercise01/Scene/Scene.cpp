@@ -17,8 +17,10 @@ using namespace DirectX;
 namespace scene
 {
 	Scene::Scene() :
-		m_ground( nullptr ),
-		m_camera( nullptr )
+		m_ground(nullptr),
+		m_camera(nullptr),
+		m_beeTimer( 0.0f ),
+		m_waspTimer( 0.0f )
 	{
 		m_ground = new Ground();
 		m_camera = new Camera();
@@ -43,6 +45,7 @@ namespace scene
 		}
 	
 		//Create Wasp list.
+		// TODO: Remove this
 		for (UINT waspGridZ = 0; waspGridZ < WaspNum; ++waspGridZ)
 		{
 			Wasp* wasp = new Wasp();
@@ -50,9 +53,8 @@ namespace scene
 		}
 
 		m_ground->Initialise();
-
 		m_camera->Initialise();
-		m_beeTimer = 5.0f;
+		m_beeTimer = 5.0f; // TODO: Magic numbers
 		m_waspTimer = 15.0f;
 
 		containers::List< Flower*>::iterator itor = m_flowerList.begin();
@@ -63,6 +65,7 @@ namespace scene
 			++itor;
 		}
 
+		// TODO: there's no bee & wasps at this stage
 		containers::List<Wasp*>::iterator itorWasp = m_waspList.begin();
 		while (itorWasp != m_waspList.end())
 		{
@@ -116,6 +119,7 @@ namespace scene
 	{
 		float timeStep = utils::Timers::GetFrameTime();
 		
+		// TODO - move this down to where it's used
 		m_beeTimer -= timeStep;
 		m_waspTimer -= timeStep;
 
@@ -154,7 +158,7 @@ namespace scene
 			m_beeList.erase(beeToDeleteItor);
 		}
 
-		bool needNewWasp = false;
+		//bool needNewWasp = false; //TODO - remove commented out code
 		containers::List<Wasp*>::iterator waspToDeleteItor = nullptr;
 		containers::List<Wasp*>::iterator itorWasp = m_waspList.begin();
 		while (itorWasp != m_waspList.end())
@@ -184,11 +188,12 @@ namespace scene
 			Bee* bee = new Bee();
 			bee->Initialise();
 			m_beeList.push_back(bee);
-			m_beeTimer = 5.0f;
+			m_beeTimer = 5.0f; // TODO Magic numbers
 		}
 
 		if (m_waspTimer < 0.1f)
 		{
+			// Spawn a new wasp.
 			Wasp* wasp = new Wasp();
 			wasp->Initialise();
 			m_waspList.push_back(wasp);
@@ -198,7 +203,7 @@ namespace scene
 
 	Flower* Scene::GetRandFlower()
 	{
-		int randFlowerFromList = (utils::Rand() % (FlowerGridSize*FlowerGridSize));
+		int randFlowerFromList = (utils::Rand() % (FlowerGridSize*FlowerGridSize)); //TODO - rename this sounds like a pointer
 		int i = 0;
 
 		containers::List< Flower*>::iterator itor = m_flowerList.begin();

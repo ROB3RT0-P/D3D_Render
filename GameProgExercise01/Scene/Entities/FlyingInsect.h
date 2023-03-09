@@ -32,6 +32,7 @@ namespace scene
         };
         
         FIMovement            m_fIState; //member_flying_Insect_State
+        UINT                   m_padding[3];
     
     private:
         virtual void OnDeviceLost() {}
@@ -40,17 +41,17 @@ namespace scene
         
         DirectX::XMVECTOR m_flowerPosition;
         DirectX::XMVECTOR m_waspPosition;
-        DirectX::XMVECTOR Velocity = DirectX::XMVECTOR{ 4.0f, 0.0f, 0.0f };
+
         float m_speed;
-        float m_timeStep;
         bool m_nectar;
         bool m_outOfBounds;
 
         static const UINT NumVertices = 21;
         static const float LerpRate;
-        static const float Radius;
-        float m_thetaPos;
-
-       
+        static const float FlowerCollisionDist;
+        static const float ExitCollisionDist;
+        static const float WaspSafeDistance;
+        static const float RadiusToBoundary;
+        float m_thetaPos; // Position of what?
     };
 }

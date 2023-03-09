@@ -10,7 +10,7 @@ namespace scene
         m_outOfBounds(false)
     {
         FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingNectar;
-        DirectX::XMVECTORF32 newPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
+        DirectX::XMVECTORF32 newPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f }; // TODO : Does nothing
     }
 
     Wasp::~Wasp()
@@ -19,14 +19,14 @@ namespace scene
 
     void Wasp::Initialise()
     {
-        static const float MaxSpeed = 1.0f;
-        
+        static const float MaxSpeed = 1.0f; // TODO: Better as a static member
+
         FlyingInsect::Initialise();
-        SetScale(0.2f);
-        DirectX::XMVECTOR beeOrientation = DirectX::XMVECTOR{ 1.0f, 0.0f, 1.0f };
+        SetScale(0.2f); // TODO: Magic number
+        DirectX::XMVECTOR beeOrientation = DirectX::XMVECTOR{ 1.0f, 0.0f, 1.0f }; // TODO: Normalise
         SetOrientation(beeOrientation);
 
-        m_thetaPos = static_cast<float>((utils::Rand() % 10000) / 10000.0f) * DirectX::XM_2PI;; // Gives float 0.0 - 1.0f
+        m_thetaPos = static_cast<float>((utils::Rand() % 10000) / 10000.0f) * DirectX::XM_2PI;; // Gives float 0.0 - 1.0f // TODO: Double ;
         m_speed = static_cast<float>((utils::Rand() % 10000) / 10000.0f); // Gives float 0.0 - 1.0f
         m_speed *= MaxSpeed;
         m_nectar = false;
@@ -37,14 +37,12 @@ namespace scene
         Flower* const flower = scene->GetRandFlower();
         m_flowerPosition = flower->GetPosition();
 
-        float zPos = static_cast<float>(utils::Rand() % 5);
-        DirectX::XMVECTOR startPos = DirectX::XMVECTOR{ -15.0f, 3.0f, zPos };
+        float zPos = static_cast<float>(utils::Rand() % 5); // TODO: What's the 5?
+        DirectX::XMVECTOR startPos = DirectX::XMVECTOR{ -15.0f, 3.0f, zPos }; // TODO: More magic numbers
         SetPosition(startPos);
 
         const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
-
         HRESULT hr = 0;
-
         auto device = deviceResources->GetD3DDevice();
 
         // Create vertex buffer.

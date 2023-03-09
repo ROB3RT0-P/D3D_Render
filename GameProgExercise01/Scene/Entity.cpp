@@ -28,15 +28,12 @@ namespace scene
 
 	void Entity::Initialise()
 	{
-		Core* const core = Core::Get();
-
-		const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
-
 		HRESULT hr = 0;
 		DWORD size = 0;
-
+		
+		Core* const core = Core::Get();
+		const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
 		ID3D11Device* const device = deviceResources->GetD3DDevice();
-
 		void* vertShaderData = nullptr;
 
 		// Load and create the vertex shader.

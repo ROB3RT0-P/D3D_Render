@@ -9,12 +9,14 @@ using namespace DirectX;
 
 namespace scene
 {
-    const float Bee::Radius = 15.0f;
+    const float Bee::RadiusToBoundary = 15.0f;
+    const float Bee::WaspDangerDistance = 2.0f;
+    const float Bee::FlowerCollisionDist = 0.2f;
+    float timeStep;
 
     Bee::Bee()
     {
         FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingNectar;
-        DirectX::XMVECTORF32 newPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
     }
 
     Bee::~Bee()
@@ -25,20 +27,18 @@ namespace scene
     {
         FlyingInsect::Initialise();
 
-        const Core* const core = Core::Get();
-        Scene* scene = core->GetScene();
-
         SetScale(0.2f);
         DirectX::XMVECTOR beeOrientation = DirectX::XMVECTOR{ 1.0f, 0.0f, 1.0f };
-        SetOrientation(beeOrientation);
+        SetOrientation(DirectX::XMVector3Normalize(beeOrientation));
 
         FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingNectar;
 
         float thetaPos = static_cast<float>((utils::Rand() % 10000) / 10000.0f); // Gives float 0.0 - 1.0f
         thetaPos = thetaPos * XM_2PI;
-        DirectX::XMVECTOR startPos = DirectX::XMVECTOR{ XMScalarSin(thetaPos) * Radius, 3.0f, XMScalarCos(thetaPos) * Radius };
+        DirectX::XMVECTOR startPos = DirectX::XMVECTOR{ XMScalarSin(thetaPos) * RadiusToBoundary, 3.0f, XMScalarCos(thetaPos) * RadiusToBoundary };
         SetPosition(startPos);
-
+        
+        const Core* const core = Core::Get();
         const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
 
         HRESULT hr = 0;
@@ -85,42 +85,38 @@ namespace scene
         ASSERT_HANDLE(hr);
     }
 
-    void Bee::PosIter()
+    void Bee::Update()
     {
-        m_timeStep = utils::Timers::GetFrameTime();
+        FlyingInsect::Update();
+
+        timeStep = utils::Timers::GetFrameTime();
         const Core* const core = Core::Get();
         Scene* scene = core->GetScene();
 
-        //Check
-        DirectX::XMVECTOR checkPos = m_position - m_flowerPosition;
-        DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(checkPos);
+        // Check distance between entity and flower.
+        DirectX::XMVECTOR checkDir = m_position - m_flowerPosition;
+        DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(checkDir);
         float distanceAsFloat = *checkPosLen.m128_f32;
-        if (distanceAsFloat < 0.2f)
+        if (distanceAsFloat < FlowerCollisionDist)
         {
             m_nectar = true;
             FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingHome;
         }
 
+        // Check distance between entity and closest wasp.
         Wasp* const closestWasp = scene->GetWaspClosestToEntity(this);
         if (closestWasp != nullptr)
         {
             XMVECTOR closestWaspPosition = closestWasp->GetPosition();
 
             DirectX::XMVECTOR vecToWasp = closestWaspPosition - m_position;
-            DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(vecToWasp);
-            float distanceAsFloat = *checkPosLen.m128_f32;
-            if (distanceAsFloat < 2.0f)
+            DirectX::XMVECTOR checkPosLenWasp = DirectX::XMVector3LengthEst(vecToWasp);
+            float distanceAsFloatWasp = *checkPosLenWasp.m128_f32;
+            if (distanceAsFloatWasp < WaspDangerDistance)
             {
                 FlyingInsect::m_fIState = FlyingInsect::FIMovement::AvoidingWasp;
             }
         }
-    }
-
-    void Bee::Update()
-    {
-        FlyingInsect::Update();
-
-        PosIter();
     }
 
     void Bee::Render()

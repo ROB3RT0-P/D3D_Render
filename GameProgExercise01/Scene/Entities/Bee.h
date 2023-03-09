@@ -17,7 +17,6 @@ namespace scene
         virtual void Render() override;
         virtual void Initialise() override;
         virtual void Update() override;
-        void PosIter();
 
     private:
         virtual void OnDeviceLost() {}
@@ -28,11 +27,13 @@ namespace scene
         DirectX::XMVECTOR m_waspPosition;
         
         float m_speed;
-        float m_timeStep;
         bool m_nectar;
 
         static const UINT NumVertices = 21;
-        static const float Radius;
+        static const float RadiusToBoundary;
+        static const float WaspDangerDistance;
+        static const float FlowerCollisionDist;
+
         float m_thetaPos;
     };
 }
