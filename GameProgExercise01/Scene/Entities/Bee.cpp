@@ -13,7 +13,6 @@ namespace scene
 
     Bee::Bee()
     {
-        m_state = Movement::None;
         FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingNectar;
         DirectX::XMVECTORF32 newPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
     }
@@ -112,34 +111,8 @@ namespace scene
             float distanceAsFloat = *checkPosLen.m128_f32;
             if (distanceAsFloat < 2.0f)
             {
-                FlyingInsect::m_fIState = FlyingInsect::FIMovement::None;
-                m_state = Movement::AvoidingWasp;
+                FlyingInsect::m_fIState = FlyingInsect::FIMovement::AvoidingWasp;
             }
-        }
-    }
-
-    void Bee::AvoidingWasp()
-    {
-        m_timeStep = utils::Timers::GetFrameTime();
-        DirectX::XMVECTOR vecToWasp = m_position - m_waspPosition;
-        DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(vecToWasp);
-        XMVECTOR vecFromWasp = XMVectorNegate(vecToWasp);//
-        XMVECTOR dirFromWasp = XMVector3Normalize(vecToWasp);
-        DirectX::XMVECTOR waspVelocity = DirectX::XMVectorScale(dirFromWasp, m_speed);
-        DirectX::XMVECTORF32 newPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
-        //NewPos = DirectX::XMVectorScale( Velocity , timeStep );
-        newPos.v = DirectX::XMVectorScale(waspVelocity, m_timeStep);
-        newPos.v += m_position;
-
-        DirectX::XMVECTOR lerpDir = DirectX::XMVectorLerp(m_orientationAsVector, dirFromWasp, 10.0f * m_timeStep);
-        SetOrientation(lerpDir);
-        SetPosition(newPos + (DirectX::XMVectorScale(lerpDir, m_speed)));
-
-        float distanceAsFloat = *checkPosLen.m128_f32;
-        if (distanceAsFloat > 10.0f)
-        {
-            m_state = Movement::None;
-            FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingNectar;
         }
     }
 
@@ -148,17 +121,6 @@ namespace scene
         FlyingInsect::Update();
 
         PosIter();
-
-        switch (m_state)
-        {
-        case Movement::AvoidingWasp:
-            AvoidingWasp();
-            break;
-        case Movement::None:
-            break;
-        default:
-            break;
-        }
     }
 
     void Bee::Render()

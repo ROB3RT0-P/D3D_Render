@@ -20,13 +20,15 @@ namespace scene
         bool OutOfBounds();
         void SeekingNectar();
         void SeekingHome();
+        void AvoidingWasp();
+
 
     protected: 
         enum class FIMovement
         {
             SeekingNectar,
             SeekingHome,
-            None
+            AvoidingWasp
         };
         
         FIMovement            m_fIState; //member_flying_Insect_State

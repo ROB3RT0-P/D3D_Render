@@ -9,11 +9,6 @@ namespace scene
 {
     class Bee  final : public FlyingInsect
     {
-        enum class Movement
-        {
-            AvoidingWasp,
-            None
-        };
 
     public:
      Bee();
@@ -23,7 +18,6 @@ namespace scene
         virtual void Initialise() override;
         virtual void Update() override;
         void PosIter();
-        void AvoidingWasp();
 
     private:
         virtual void OnDeviceLost() {}
@@ -40,7 +34,5 @@ namespace scene
         static const UINT NumVertices = 21;
         static const float Radius;
         float m_thetaPos;
-
-        Movement            m_state;
     };
 }
