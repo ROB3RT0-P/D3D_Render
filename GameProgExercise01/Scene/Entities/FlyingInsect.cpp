@@ -11,7 +11,7 @@ namespace scene
 {
     const float FlyingInsect::Radius = 15.0f;
     const float FlyingInsect::LerpRate = 0.75f;
-    static const float MaxSpeed = 1.0f;
+    static const float MaxSpeed = .1f;
 
     FlyingInsect::FlyingInsect() :
         m_fIState( FIMovement::None ),
@@ -83,12 +83,15 @@ namespace scene
             DirectX::XMVECTOR distanceToExitPointVec = DirectX::XMVector3LengthEst(directionToExitPoint);
             float distanceToExitPoint = *distanceToExitPointVec.m128_f32;
             DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(directionToExitPoint);
-            DirectX::XMVECTOR desiredVelocity = DirectX::XMVectorScale(normalisedDir, m_speed*100);
+            //DirectX::XMVECTOR desiredVelocity = DirectX::XMVectorScale(normalisedDir, m_speed);
 
-            DirectX::XMVECTOR delta = DirectX::XMVectorScale(desiredVelocity, m_timeStep);
-            m_position.v = DirectX::XMVectorAdd(m_position.v, delta);
+            //DirectX::XMVECTOR delta = DirectX::XMVectorScale(desiredVelocity, m_timeStep);
+            //m_position.v = DirectX::XMVectorAdd(m_position.v, delta);
 
-            SetPosition(m_position.v);
+
+            SetPosition(m_position + (DirectX::XMVectorScale(normalisedDir, m_speed)));
+
+            //SetPosition(m_position.v);
 
             if (distanceToExitPoint <= 0.1f)
             {
@@ -108,14 +111,14 @@ namespace scene
 
 
         //Check
-        DirectX::XMVECTOR checkPos = m_position - m_flowerPosition;
+       /* DirectX::XMVECTOR checkPos = m_position - m_flowerPosition;
         DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(checkPos);
         float distanceAsFloat = *checkPosLen.m128_f32;
         if (distanceAsFloat < 0.2f)
         {
             m_nectar = true;
             FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingHome;
-        }
+        }*/
         switch (m_fIState)
         {
         case FIMovement::SeekingNectar:

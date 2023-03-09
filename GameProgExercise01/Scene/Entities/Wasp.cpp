@@ -9,7 +9,7 @@ namespace scene
     Wasp::Wasp() :
         m_outOfBounds(false)
     {
-        m_state = Movement::SeekingNectar;
+        FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingNectar;
         DirectX::XMVECTORF32 newPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
     }
 
@@ -19,19 +19,18 @@ namespace scene
 
     void Wasp::Initialise()
     {
-        static const float MaxSpeed = 4.0f;
+        static const float MaxSpeed = 1.0f;
         
-
-        Entity::Initialise();
+        FlyingInsect::Initialise();
         SetScale(0.2f);
         DirectX::XMVECTOR beeOrientation = DirectX::XMVECTOR{ 1.0f, 0.0f, 1.0f };
         SetOrientation(beeOrientation);
 
         m_thetaPos = static_cast<float>((utils::Rand() % 10000) / 10000.0f) * DirectX::XM_2PI;; // Gives float 0.0 - 1.0f
         m_speed = static_cast<float>((utils::Rand() % 10000) / 10000.0f); // Gives float 0.0 - 1.0f
-        m_speed *= MaxSpeed*2;
+        m_speed *= MaxSpeed;
         m_nectar = false;
-        m_state = Movement::SeekingNectar;
+        FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingNectar;
 
         const Core* const core = Core::Get();
         Scene* scene = core->GetScene();
@@ -91,103 +90,9 @@ namespace scene
         ASSERT_HANDLE(hr);
     }
 
-    
-    void Wasp::PosIter()
-    {
-        m_timeStep = utils::Timers::GetFrameTime();
-        m_direction = DirectX::XMVectorSubtract(m_flowerPosition, m_position);
-        m_normalisedDir = DirectX::XMVector3Normalize(m_direction);
-        m_flowerVelocity = DirectX::XMVectorScale(m_normalisedDir, m_speed);
-    }
-
-    void Wasp::SeekingNectar()
-    {
-        if (!m_nectar)
-        {
-            m_timeStep = utils::Timers::GetFrameTime();
-
-            if (!m_nectar)
-            {
-                DirectX::XMVECTORF32 newPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
-                //NewPos = DirectX::XMVectorScale( Velocity , timeStep );
-                newPos.v = DirectX::XMVectorScale(m_flowerVelocity, m_timeStep);
-                newPos.v += m_position;
-
-                DirectX::XMVECTOR lerpDir = DirectX::XMVectorLerp(m_orientationAsVector, m_direction, 0.12f * m_timeStep);
-                SetOrientation(lerpDir);
-                SetPosition(newPos + (DirectX::XMVectorScale(lerpDir, m_speed * m_timeStep)));
-
-                DirectX::XMVECTOR checkPos = m_position - m_flowerPosition;
-                DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(checkPos);
-                float distanceAsFloat = *checkPosLen.m128_f32;
-                if (distanceAsFloat < 0.2f)
-                {
-                    m_nectar = true;
-                    m_state = Movement::SeekingHome;
-                }
-            }
-        }
-        else
-        {
-            m_state = Movement::SeekingHome;
-        }
-    }
-
-    void Wasp::SeekingHome()
-    {
-        if (m_nectar) {
-
-            m_timeStep = utils::Timers::GetFrameTime();
-            float Radius = 15.0f;
-            
-            DirectX::XMVECTOR leavePos = DirectX::XMVECTOR{ DirectX::XMScalarSin(m_thetaPos) * Radius, 3.0f, DirectX::XMScalarCos(m_thetaPos) * Radius };
-
-            DirectX::XMVECTOR directionToExitPoint = DirectX::XMVectorSubtract(leavePos, m_position);
-            DirectX::XMVECTOR distanceToExitPointVec = DirectX::XMVector3LengthEst(directionToExitPoint);
-            float distanceToExitPoint = *distanceToExitPointVec.m128_f32;
-            ASSERT(distanceToExitPoint > 0.0001f, "Tiny distance\n");
-            DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(directionToExitPoint);
-            DirectX::XMVECTOR desiredVelocity = DirectX::XMVectorScale(normalisedDir, m_speed);
-
-            DirectX::XMVECTOR delta = DirectX::XMVectorScale(desiredVelocity, m_timeStep);
-            m_position.v = DirectX::XMVectorAdd(m_position.v, delta);
-
-            SetPosition(m_position.v);
-
-
-            ///DirectX::XMVECTOR distanceOriginToExitPointVec = DirectX::XMVector3LengthEst(leavePos);
-            //float distanceOriginToExitPoint = *distanceOriginToExitPointVec.m128_f32;
-
-            if (distanceToExitPoint <= 0.1f)
-            {
-                m_outOfBounds = true;
-            }
-        }
-        else {
-            m_state = Movement::SeekingNectar;
-        }
-    }
-
     void Wasp::Update()
     {
-        PosIter();
-        
-        switch (m_state)
-        {
-        case Movement::SeekingNectar:
-            SeekingNectar();
-            break;
-        case Movement::SeekingHome:
-            SeekingHome();
-            break;
-        default:
-            break;
-        }
-    }
-
-    bool Wasp::OutOfBounds()
-    {
-        return m_outOfBounds;
+        FlyingInsect::Update();
     }
 
     void Wasp::Render()

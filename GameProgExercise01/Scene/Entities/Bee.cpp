@@ -102,8 +102,7 @@ namespace scene
             FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingHome;
         }
 
-
-        /*Wasp* const closestWasp = scene->GetWaspClosestToEntity(this);
+        Wasp* const closestWasp = scene->GetWaspClosestToEntity(this);
         if (closestWasp != nullptr)
         {
             XMVECTOR closestWaspPosition = closestWasp->GetPosition();
@@ -116,7 +115,7 @@ namespace scene
                 FlyingInsect::m_fIState = FlyingInsect::FIMovement::None;
                 m_state = Movement::AvoidingWasp;
             }
-        }*/
+        }
     }
 
     void Bee::AvoidingWasp()
