@@ -11,24 +11,19 @@ namespace scene
     {
         enum class Movement
         {
-            SeekingNectar,
             AvoidingWasp,
-            SeekingHome
-        };       
+            None
+        };
 
     public:
-
      Bee();
      ~Bee();
 
         virtual void Render() override;
         virtual void Initialise() override;
-        void Update();
+        virtual void Update() override;
         void PosIter();
-        bool OutOfBounds();
-        void SeekingNectar();
         void AvoidingWasp();
-        void SeekingHome();
 
     private:
         virtual void OnDeviceLost() {}
@@ -41,7 +36,6 @@ namespace scene
         float m_speed;
         float m_timeStep;
         bool m_nectar;
-        bool m_outOfBounds;
 
         static const UINT NumVertices = 21;
         static const float Radius;

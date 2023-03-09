@@ -46,9 +46,7 @@ namespace scene
         bool                m_outOfBounds;
         float               m_thetaPos;
 
-        static const UINT m_waitMillisec = 100000;
-
-
+        static const UINT   m_waitMillisec = 100000;
         static const UINT   NumVertices = 21;
 
         Movement            m_state;

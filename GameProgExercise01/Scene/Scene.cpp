@@ -32,10 +32,6 @@ namespace scene
 
 	void Scene::Initialise()
 	{
-		m_camera->Initialise();
-		m_beeTimer = 5.0f;
-		m_waspTimer = 15.0f;
-
 		//Create Flower List.
 		for (UINT gridX = 0; gridX < FlowerGridSize; ++gridX)
 		{
@@ -53,8 +49,11 @@ namespace scene
 			m_waspList.push_back(wasp);
 		}
 
-
 		m_ground->Initialise();
+
+		m_camera->Initialise();
+		m_beeTimer = 5.0f;
+		m_waspTimer = 15.0f;
 
 		containers::List< Flower*>::iterator itor = m_flowerList.begin();
 		while (itor != m_flowerList.end())
