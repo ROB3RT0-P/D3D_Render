@@ -17,8 +17,6 @@ namespace scene
 	{
 	public:
 		static const UINT FlowerGridSize = 4;
-		UINT BeeNum = 1;
-		float BeeTimer = 5.0f;
 
 		Scene();
 		~Scene();
@@ -31,7 +29,6 @@ namespace scene
 		void				AdjustBeeTimer( int AdjutedBeeTimer);
 
 		Flower*				GetRandFlower();
-		Wasp*				GetWasps();
 		Wasp*				GetWaspClosestToEntity( const Entity* const entity );
 		Bee*				GetBeeClosestToFlower( const Flower* const flower );
 		Flower*				GetHighestNectarFlower();
@@ -44,19 +41,18 @@ namespace scene
 
 		int				GetBeeNum()
 		{
-			return BeeNum;
+			return m_beeNum;
 		}
 
 		float				GetBeeTimer()
 		{
-			return BeeTimer;
+			return m_beeTimer;
 		}
 
 	private:
-		float				m_beeTimer;
 		float				m_waspTimer;
-		float				m_initBeeTimer;
-		float				m_initWaspTimer;
+		UINT				m_beeNum = 1;
+		float				m_beeTimer = 5.0f;
 		Ground*				m_ground;
 		Camera*				m_camera;
 

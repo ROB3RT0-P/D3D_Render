@@ -16,8 +16,6 @@ using namespace DirectX;
 
 namespace scene
 {
-	float initBeeTimer = 5.0f;
-	float initWaspTimer = 15.0f;
 	float m_beeTimer = 5.0f;
 	float m_waspTimer = 15.0f;
 
@@ -41,32 +39,33 @@ namespace scene
 	void Scene::AdjustBeeNum(int AdjustedBeeNum)
 	{
 		float timeStep = utils::Timers::GetFrameTime();
-		BeeNum = AdjustedBeeNum;
+		m_beeNum = AdjustedBeeNum;
 		
 		// Correct BeeNum if it goes too low or too high.
-		if (BeeNum <= 0)
+		if (m_beeNum <= 0)
 		{
-			BeeNum = 1;
+			m_beeNum = 1;
 		}
-		else if (BeeNum > 10)
+		else if (m_beeNum > 10)
 		{
-			BeeNum = 10;
+			m_beeNum = 10;
 		}
 	}
 
+	// TODO - BeeNum m_beeNum
 	void Scene::AdjustBeeTimer(int AdjustedBeeNum)
 	{
 		float timeStep = utils::Timers::GetFrameTime();
-		BeeTimer = AdjustedBeeNum;
+		m_beeTimer = AdjustedBeeNum;
 
 		// Correct BeeNum if it goes too low or too high.
-		if (BeeTimer <= 0)
+		if (m_beeTimer <= 0)
 		{
-			BeeTimer = 1.0f;
+			m_beeTimer = 1.0f;
 		}
-		else if (BeeTimer > 40.0f)
+		else if (m_beeTimer > 40.0f)
 		{
-			BeeTimer = 40.0f;
+			m_beeTimer = 40.0f;
 		}
 	}
 
