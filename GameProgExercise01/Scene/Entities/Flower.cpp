@@ -1,7 +1,8 @@
 #include "GameProgExercise01.h"
 #include "Core.h"
 #include "Flower.h"
-#include <math.h>
+#include "Scene\Entities\Bee.h"
+#include "Scene\Scene.h"
 
 namespace scene
 {
@@ -25,7 +26,8 @@ namespace scene
         Entity::Initialise();
         DirectX::XMVECTORF32 petalPos = m_position;
         petalPos.f[1] = PetalHeight;
-        
+        NectarLevel = static_cast<float>(utils::Rand() % 100);//Get rand num between 0 - 100.
+
         Core* const core = Core::Get();
         const DX::DeviceResources* const deviceResources = core->GetDeviceResources();
         HRESULT hr = 0;
@@ -120,6 +122,29 @@ namespace scene
         ASSERT_HANDLE(hr);
 
        delete[] allVertices;
+    }
+
+    void Flower::Update()
+    {
+        float timeStep = utils::Timers::GetFrameTime();
+        NectarLevel += timeStep;
+
+        const Core* const core = Core::Get();
+        Scene* scene = core->GetScene();
+
+        Bee* const closestBee = scene->GetBeeClosestToFlower(this);
+        if (closestBee != nullptr)
+        {
+            DirectX::XMVECTOR beePos = closestBee->GetPosition();
+            DirectX::XMVECTOR vecToBee = beePos - m_position;
+            DirectX::XMVECTOR checkPosLenBee = DirectX::XMVector3LengthEst(vecToBee);
+            float distanceAsFloatBee = *checkPosLenBee.m128_f32;
+            
+            if (distanceAsFloatBee < CollisionDist)
+            {
+                NectarLevel = 0.0f;
+            }
+        }
     }
 
     void Flower::Render()

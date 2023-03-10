@@ -48,9 +48,11 @@ namespace scene
 
         static const UINT NumVertices = 21;
         static const float LerpRate;
+        
         static const float FlowerCollisionDist;
         static const float ExitCollisionDist;
         static const float WaspSafeDistance;
+        
         static const float RadiusToBoundary;
         float m_thetaPos; // Position of what?
     };

@@ -20,7 +20,7 @@ void Input::Update()
 	scene::Scene* scene = core->GetScene();
 	scene::Camera* const camera = scene->GetCamera();
 
-	float	yRotAdjustment = 0.0f;
+	float yRotAdjustment = 0.0f;
 	auto kb = m_keyboard->GetState();
 	if (kb.Right)
 	{
@@ -31,4 +31,39 @@ void Input::Update()
 		yRotAdjustment = 1.0f;
 	}
 	camera->AdjustYRotation(yRotAdjustment);
+
+	float height = 0.0f;
+	if (kb.Up)
+	{
+		height = 1.0f;
+	}
+	else if (kb.Down)
+	{
+		height = -1.0f;
+	}
+	camera->AdjustHeight(height);
+
+	int numberOfBees = scene->GetBeeNum();
+	if (kb.A)
+	{
+			numberOfBees += 1;
+	}
+	else if(kb.D)
+	{
+			numberOfBees -= 1;
+	}
+	scene->AdjustBeeNum( numberOfBees );
+
+	int beeTimer = scene->GetBeeTimer();
+	if (kb.W)
+	{
+		beeTimer += 1;
+	}
+	else if (kb.S)
+	{
+		beeTimer -= 1;
+	}
+	scene->AdjustBeeTimer(beeTimer);
+
+
 }

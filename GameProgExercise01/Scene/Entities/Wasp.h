@@ -25,9 +25,11 @@ namespace scene
 
         float               m_speed;
         float               m_timeStep;
+        float               m_thetaPos;
+        float               m_maxSpeed;
+        float               m_scale;
         bool                m_nectar;
         bool                m_outOfBounds;
-        float               m_thetaPos;
 
         static const UINT   m_waitMillisec = 100000;
         static const UINT   NumVertices = 21;

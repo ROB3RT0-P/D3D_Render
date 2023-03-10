@@ -13,9 +13,9 @@ namespace scene
     const float FlyingInsect::RadiusToBoundary = 15.0f;
     const float FlyingInsect::LerpRate = 0.75f;
     static const float MaxSpeed = 0.1f;
-    static const float FlowerCollisionDist = 0.2f;
-    static const float ExitCollisionDist = 0.1f;
-    static const float WaspSafeDistance = 10.0f;
+    const float FlyingInsect::FlowerCollisionDist = 0.2f;
+    const float FlyingInsect::ExitCollisionDist = 0.1f;
+    const float FlyingInsect::WaspSafeDistance = 10.0f;
 
     float lerpSpeed = 10.0f;
 
@@ -41,14 +41,19 @@ namespace scene
         // Get position of a rand flower.
         const Core* const core = Core::Get();
         Scene* scene = core->GetScene();
-        Flower* const flower = scene->GetRandFlower();
-        m_flowerPosition = flower->GetPosition();
+        //Flower* const flower = scene->GetRandFlower();
+        //Flower* const flower = scene->GetHighestNectarFlower();
+        //m_flowerPosition = flower->GetPosition();
     }
 
     void FlyingInsect::SeekingNectar()
     {
-        float timeStep = utils::Timers::GetFrameTime(); //TODO time step doesn't need to be a member variable
-        
+        float timeStep = utils::Timers::GetFrameTime(); 
+        const Core* const core = Core::Get();
+        Scene* scene = core->GetScene();
+        Flower* const flower = scene->GetHighestNectarFlower();
+        m_flowerPosition = flower->GetPosition();
+
         if (!m_nectar)
         {
             // Calculate velocity to flower
@@ -62,11 +67,11 @@ namespace scene
             SetOrientation(lerpDir);
             SetPosition(m_position + (DirectX::XMVectorScale(lerpDir, m_speed)));
 
-            // TODO - this code is for a different purpose
+            // Check for bee flower collision
             DirectX::XMVECTOR checkPos = m_position - m_flowerPosition;
             DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(checkPos);
             float distanceAsFloat = *checkPosLen.m128_f32;
-            if ( distanceAsFloat < FlowerCollisionDist ) // TODO: Magic number
+            if ( distanceAsFloat < FlowerCollisionDist )
             {
                 m_nectar = true;
             }
@@ -79,7 +84,8 @@ namespace scene
 
     void FlyingInsect::SeekingHome()
     {
-        if (m_nectar) { // TODO newline
+        if (m_nectar) 
+        {
 
             float timeStep = utils::Timers::GetFrameTime();
 
@@ -92,7 +98,7 @@ namespace scene
 
             SetPosition(m_position + (DirectX::XMVectorScale(normalisedDir, m_speed)));
 
-            if ( distanceToExitPoint <= ExitCollisionDist ) // TODO magic number
+            if ( distanceToExitPoint <= ExitCollisionDist )
             {
                 m_outOfBounds = true;
             }
@@ -120,7 +126,7 @@ namespace scene
 
         // Check bee is safe distance from wasp.
         float distanceAsFloat = *checkPosLen.m128_f32;
-        if (distanceAsFloat > WaspSafeDistance) // TODO: Magic number
+        if (distanceAsFloat > WaspSafeDistance)
         {
             FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingNectar;
         }

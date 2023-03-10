@@ -22,6 +22,8 @@ namespace scene
 	void Camera::Initialise()
 	{
 		m_offset = XMVectorSet(10.0f, 5.0f, 0.0f, 1.0f);
+		m_origin.v = { 1.5f, 1.0f, 2.0f };
+		m_up = XMVECTOR{ 0.0f, 1.0f, 0.0f, 1.0f };
 	}
 
 	void Camera::Update()
@@ -32,12 +34,8 @@ namespace scene
 		// Rotate our offset (offset is along the x-axis)
 		const XMVECTOR rotatedOffset = XMVector3Transform(m_offset, rotationY);
 
-		//XMVECTOR origin = XMVectorZero();//Change origin
-		XMVECTOR origin = XMVECTOR{ 1.5f, 0.0f, 2.0f };
-
-		XMVECTOR eyePosition = rotatedOffset + origin;//XMVECTOR originOffset = XMVECTOR{ 5.0f , 1.0f, 5.0f };
-		XMVECTOR up = XMVECTOR{ 0.0f, 1.0f, 0.0f, 1.0f };// Create our view matrix using the look at helper function
-		XMMATRIX viewMatrix = XMMatrixLookAtLH(eyePosition, origin, up);
+		XMVECTOR eyePosition = rotatedOffset + m_origin.v;
+		XMMATRIX viewMatrix = XMMatrixLookAtLH(eyePosition, m_origin.v, m_up);
 
 		const Core* const core = Core::Get();
 		DX::View* view = core->GetView();
@@ -50,5 +48,11 @@ namespace scene
 	{
 		float timeStep = utils::Timers::GetFrameTime();
 		m_yAngle += (rotAmount * timeStep);
+	}
+
+	void Camera::AdjustHeight(float adjustedHeight)
+	{
+		float timeStep = utils::Timers::GetFrameTime();
+		m_origin.f[1] += (adjustedHeight * timeStep);
 	}
 }

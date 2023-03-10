@@ -103,7 +103,9 @@ namespace scene
             FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingHome;
         }
 
-        // Check distance between entity and closest wasp.
+
+
+       /* // Check distance between entity and closest wasp.
         Wasp* const closestWasp = scene->GetWaspClosestToEntity(this);
         if (closestWasp != nullptr)
         {
@@ -116,7 +118,7 @@ namespace scene
             {
                 FlyingInsect::m_fIState = FlyingInsect::FIMovement::AvoidingWasp;
             }
-        }
+        }*/
     }
 
     void Bee::Render()

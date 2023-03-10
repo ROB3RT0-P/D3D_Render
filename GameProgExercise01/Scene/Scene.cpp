@@ -16,11 +16,17 @@ using namespace DirectX;
 
 namespace scene
 {
+	float initBeeTimer = 5.0f;
+	float initWaspTimer = 15.0f;
+	float m_beeTimer = 5.0f;
+	float m_waspTimer = 15.0f;
+
 	Scene::Scene() :
 		m_ground(nullptr),
 		m_camera(nullptr),
 		m_beeTimer( 0.0f ),
 		m_waspTimer( 0.0f )
+
 	{
 		m_ground = new Ground();
 		m_camera = new Camera();
@@ -30,6 +36,38 @@ namespace scene
 	{
 		delete m_ground;
 		delete m_camera;
+	}
+
+	void Scene::AdjustBeeNum(int AdjustedBeeNum)
+	{
+		float timeStep = utils::Timers::GetFrameTime();
+		BeeNum = AdjustedBeeNum;
+		
+		// Correct BeeNum if it goes too low or too high.
+		if (BeeNum <= 0)
+		{
+			BeeNum = 1;
+		}
+		else if (BeeNum > 10)
+		{
+			BeeNum = 10;
+		}
+	}
+
+	void Scene::AdjustBeeTimer(int AdjustedBeeNum)
+	{
+		float timeStep = utils::Timers::GetFrameTime();
+		BeeTimer = AdjustedBeeNum;
+
+		// Correct BeeNum if it goes too low or too high.
+		if (BeeTimer <= 0)
+		{
+			BeeTimer = 1.0f;
+		}
+		else if (BeeTimer > 40.0f)
+		{
+			BeeTimer = 40.0f;
+		}
 	}
 
 	void Scene::Initialise()
@@ -43,19 +81,9 @@ namespace scene
 				m_flowerList.push_back(flower);
 			}
 		}
-	
-		//Create Wasp list.
-		// TODO: Remove this
-		for (UINT waspGridZ = 0; waspGridZ < WaspNum; ++waspGridZ)
-		{
-			Wasp* wasp = new Wasp();
-			m_waspList.push_back(wasp);
-		}
 
 		m_ground->Initialise();
 		m_camera->Initialise();
-		m_beeTimer = 5.0f; // TODO: Magic numbers
-		m_waspTimer = 15.0f;
 
 		containers::List< Flower*>::iterator itor = m_flowerList.begin();
 		while (itor != m_flowerList.end())
@@ -63,23 +91,6 @@ namespace scene
 			Flower* flower = *itor;
 			flower->Initialise();
 			++itor;
-		}
-
-		// TODO: there's no bee & wasps at this stage
-		containers::List<Wasp*>::iterator itorWasp = m_waspList.begin();
-		while (itorWasp != m_waspList.end())
-		{
-			Wasp* wasp = *itorWasp;
-			wasp->Initialise();
-			++itorWasp;
-		}
-
-		containers::List<Bee*>::iterator itorBee = m_beeList.begin();
-		while (itorBee != m_beeList.end())
-		{
-			Bee* bee = *itorBee;
-			bee->Initialise();
-			++itorBee;
 		}
 	}
 
@@ -118,10 +129,6 @@ namespace scene
 	void Scene::Update()
 	{
 		float timeStep = utils::Timers::GetFrameTime();
-		
-		// TODO - move this down to where it's used
-		m_beeTimer -= timeStep;
-		m_waspTimer -= timeStep;
 
 		m_ground->Update();
 		m_camera->Update();
@@ -158,7 +165,6 @@ namespace scene
 			m_beeList.erase(beeToDeleteItor);
 		}
 
-		//bool needNewWasp = false; //TODO - remove commented out code
 		containers::List<Wasp*>::iterator waspToDeleteItor = nullptr;
 		containers::List<Wasp*>::iterator itorWasp = m_waspList.begin();
 		while (itorWasp != m_waspList.end())
@@ -182,13 +188,20 @@ namespace scene
 			m_waspList.erase(waspToDeleteItor);
 		}
 
+		m_beeTimer -= timeStep;
+		m_waspTimer -= timeStep;
+
 		if (m_beeTimer < 0.1f)
 		{
-			// Spawn a new bee
-			Bee* bee = new Bee();
-			bee->Initialise();
-			m_beeList.push_back(bee);
-			m_beeTimer = 5.0f; // TODO Magic numbers
+			for (int i = 0; i <= BeeNum; ++i)
+			{
+				// Spawn a new bee
+				Bee* bee = new Bee();
+				bee->Initialise();
+				m_beeList.push_back(bee);
+				//m_beeTimer = m_initBeeTimer;
+				m_beeTimer = BeeTimer;
+			}
 		}
 
 		if (m_waspTimer < 0.1f)
@@ -197,19 +210,19 @@ namespace scene
 			Wasp* wasp = new Wasp();
 			wasp->Initialise();
 			m_waspList.push_back(wasp);
-			m_waspTimer = 15.0f;
+			//m_waspTimer = m_initWaspTimer;
 		}
 	}
 
 	Flower* Scene::GetRandFlower()
 	{
-		int randFlowerFromList = (utils::Rand() % (FlowerGridSize*FlowerGridSize)); //TODO - rename this sounds like a pointer
+		int randFlowerObjFromList = (utils::Rand() % (FlowerGridSize*FlowerGridSize));
 		int i = 0;
 
 		containers::List< Flower*>::iterator itor = m_flowerList.begin();
 		while (itor != m_flowerList.end())
 		{
-			if(i == randFlowerFromList)
+			if(i == randFlowerObjFromList)
 			{	
 				Flower* flower = *itor;
 				return flower;
@@ -225,7 +238,7 @@ namespace scene
 		Wasp* closestWasp = nullptr;
 		float closestDistance = FLT_MAX;
 
-		XMVECTOR entityPostion = entity->GetPosition();
+		XMVECTOR entityPosition = entity->GetPosition();
 
 		containers::List< Wasp*>::iterator itorWasp = m_waspList.begin();
 		while (itorWasp != m_waspList.end())
@@ -235,7 +248,7 @@ namespace scene
 			// Get the distance from the passed entity to the wasp
 			XMVECTOR waspPosition = wasp->GetPosition();
 
-			XMVECTOR distanceAsVector = entityPostion - waspPosition;
+			XMVECTOR distanceAsVector = entityPosition - waspPosition;
 
 			XMVECTOR distanceAsFloat = XMVector3Length( distanceAsVector );
 
@@ -250,6 +263,61 @@ namespace scene
 		}
 
 		return closestWasp;
+	}
+
+	Bee* Scene::GetBeeClosestToFlower( const Flower* const flower )
+	{
+		Bee* closestBee = nullptr;
+		float closestDistance = FLT_MAX;
+		XMVECTOR flowerPosition = flower->GetPosition();
+
+		containers::List< Bee*>::iterator itorBee = m_beeList.begin();
+		while (itorBee != m_beeList.end())
+		{
+			Bee* const bee = *itorBee;
+
+			// Get the distance from the passed entity to the wasp
+			XMVECTOR beePosition = bee->GetPosition();
+
+			XMVECTOR distanceAsVector = beePosition - flowerPosition;
+
+			XMVECTOR distanceAsFloat = XMVector3Length(distanceAsVector);
+
+			// Test to see if this wasp is closer than any others checked so far
+			if (*distanceAsFloat.m128_f32 < closestDistance )
+			{
+					// Store the closest wasp
+					closestDistance = *distanceAsFloat.m128_f32;
+					closestBee = bee;
+			}
+			++itorBee;
+		}
+		return closestBee;
+	}
+
+	Flower* Scene::GetHighestNectarFlower()
+	{
+		Flower* highestNectarFlower = nullptr;
+		float highestNectar = 0.0f;
+
+		containers::List< Flower*>::iterator itorFlower = m_flowerList.begin();
+		while (itorFlower != m_flowerList.end())
+		{
+			Flower* const flower = *itorFlower;
+
+			// Get the nectar level
+			XMVECTOR flowerPosition = flower->GetPosition();
+			float flowerNectarNum = flower->GetNectarFloat();
+			
+			// Check if nectar value is higher than last.
+			if (flowerNectarNum > highestNectar)
+			{
+				// Store the highest nectar flower.
+				highestNectarFlower = *itorFlower;
+			}
+			++itorFlower;
+		}
+		return highestNectarFlower;
 	}
 
 	void Scene::Render()
