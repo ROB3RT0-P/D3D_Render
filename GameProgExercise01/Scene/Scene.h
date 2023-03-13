@@ -51,10 +51,13 @@ namespace scene
 
 	private:
 		float				m_waspTimer;
+		float				m_beeTimer;
+		float				m_beeTimerReset;
+		float				m_waspTimerReset;
 		UINT				m_beeNum = 1;
-		float				m_beeTimer = 5.0f;
 		Ground*				m_ground;
 		Camera*				m_camera;
+
 
 		containers::List<Bee*> m_beeList;
 		containers::List<Flower*> m_flowerList;

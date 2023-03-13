@@ -12,7 +12,6 @@ namespace scene
     const float Bee::RadiusToBoundary = 15.0f;
     const float Bee::WaspDangerDistance = 2.0f;
     const float Bee::FlowerCollisionDist = 0.2f;
-    float timeStep;
 
     Bee::Bee()
     {
@@ -34,8 +33,8 @@ namespace scene
         FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingNectar;
 
         float thetaPos = static_cast<float>((utils::Rand() % 10000) / 10000.0f); // Gives float 0.0 - 1.0f
-        thetaPos = thetaPos * XM_2PI;
-        DirectX::XMVECTOR startPos = DirectX::XMVECTOR{ XMScalarSin(thetaPos) * RadiusToBoundary, 3.0f, XMScalarCos(thetaPos) * RadiusToBoundary };
+        float radiusPos = thetaPos * XM_2PI;
+        DirectX::XMVECTOR startPos = DirectX::XMVECTOR{ XMScalarSin(radiusPos) * RadiusToBoundary, 3.0f, XMScalarCos(radiusPos) * RadiusToBoundary };
         SetPosition(startPos);
         
         const Core* const core = Core::Get();
@@ -89,7 +88,7 @@ namespace scene
     {
         FlyingInsect::Update();
 
-        timeStep = utils::Timers::GetFrameTime();
+        float timeStep = utils::Timers::GetFrameTime();
         const Core* const core = Core::Get();
         Scene* scene = core->GetScene();
 
@@ -103,9 +102,7 @@ namespace scene
             FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingHome;
         }
 
-
-
-       /* // Check distance between entity and closest wasp.
+        // Check distance between entity and closest wasp.
         Wasp* const closestWasp = scene->GetWaspClosestToEntity(this);
         if (closestWasp != nullptr)
         {
@@ -118,7 +115,7 @@ namespace scene
             {
                 FlyingInsect::m_fIState = FlyingInsect::FIMovement::AvoidingWasp;
             }
-        }*/
+        }
     }
 
     void Bee::Render()

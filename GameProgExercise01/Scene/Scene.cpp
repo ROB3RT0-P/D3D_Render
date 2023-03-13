@@ -16,18 +16,20 @@ using namespace DirectX;
 
 namespace scene
 {
-	float m_beeTimer = 5.0f;
-	float m_waspTimer = 15.0f;
-
 	Scene::Scene() :
 		m_ground(nullptr),
 		m_camera(nullptr),
 		m_beeTimer( 0.0f ),
-		m_waspTimer( 0.0f )
-
+		m_waspTimer( 0.0f ),
+		m_beeTimerReset( 0.0f ),
+		m_waspTimerReset( 0.0f )
 	{
 		m_ground = new Ground();
 		m_camera = new Camera();
+		m_beeTimer = 5.0f;
+		m_waspTimer = 15.0f;
+		m_beeTimerReset = 5.0f;
+		m_waspTimerReset = 15.0f;
 	}
 
 	Scene::~Scene()
@@ -190,16 +192,15 @@ namespace scene
 		m_beeTimer -= timeStep;
 		m_waspTimer -= timeStep;
 
-		if (m_beeTimer < 0.1f)
+		if (m_beeTimer < 0.2f)
 		{
-			for (int i = 0; i <= BeeNum; ++i)
+			for (int i = 0; i <= m_beeNum; ++i)
 			{
 				// Spawn a new bee
 				Bee* bee = new Bee();
 				bee->Initialise();
 				m_beeList.push_back(bee);
-				//m_beeTimer = m_initBeeTimer;
-				m_beeTimer = BeeTimer;
+				m_beeTimer = m_beeTimerReset;
 			}
 		}
 
@@ -209,7 +210,7 @@ namespace scene
 			Wasp* wasp = new Wasp();
 			wasp->Initialise();
 			m_waspList.push_back(wasp);
-			//m_waspTimer = m_initWaspTimer;
+			m_waspTimer = m_waspTimerReset;
 		}
 	}
 
@@ -312,7 +313,8 @@ namespace scene
 			if (flowerNectarNum > highestNectar)
 			{
 				// Store the highest nectar flower.
-				highestNectarFlower = *itorFlower;
+				highestNectar = flowerNectarNum;
+				highestNectarFlower = flower;
 			}
 			++itorFlower;
 		}

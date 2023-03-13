@@ -32,12 +32,23 @@ void Input::Update()
 	}
 	camera->AdjustYRotation(yRotAdjustment);
 
-	float height = 0.0f;
+	float xRotAdjustment = 0.0f;
 	if (kb.Up)
+	{
+		xRotAdjustment = -1.0f;
+	}
+	else if (kb.Down)
+	{
+		xRotAdjustment = 1.0f;
+	}
+	camera->AdjustXRotation(xRotAdjustment);
+
+	float height = 0.0f;
+	if (kb.I)
 	{
 		height = 1.0f;
 	}
-	else if (kb.Down)
+	else if (kb.K)
 	{
 		height = -1.0f;
 	}

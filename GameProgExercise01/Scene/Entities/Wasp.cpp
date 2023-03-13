@@ -10,8 +10,8 @@ namespace scene
         m_outOfBounds(false)
     {
         FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingNectar;
-        static const float m_maxSpeed = 1.0f;
-        const float m_scale = 0.1f;
+        m_maxSpeed = 1.0f;
+        m_scale = 0.2f;
     }
 
     Wasp::~Wasp()
@@ -21,7 +21,7 @@ namespace scene
     void Wasp::Initialise()
     {
         FlyingInsect::Initialise();
-        SetScale(m_scale/10);
+        SetScale(m_scale);
         DirectX::XMVECTOR beeOrientation = DirectX::XMVECTOR{ 1.0f, 0.0f, 1.0f };
         SetOrientation(DirectX::XMVector3Normalize(beeOrientation));
 

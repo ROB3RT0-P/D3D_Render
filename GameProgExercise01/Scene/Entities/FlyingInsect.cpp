@@ -34,16 +34,14 @@ namespace scene
     void FlyingInsect::Initialise()
     {
         Entity::Initialise();
-        m_thetaPos = static_cast<float>((utils::Rand() % 10000) / 10000.0f) * DirectX::XM_2PI;; // Gives float 0.0 - 1.0f
+
+        m_radiusPos = static_cast<float>((utils::Rand() % 10000) / 10000.0f) * DirectX::XM_2PI;; // Gives float 0.0 - 1.0f
         m_speed = static_cast<float>((utils::Rand() % 10000) / 10000.0f); // Gives float 0.0 - 1.0f
         m_speed *= MaxSpeed;
         
         // Get position of a rand flower.
         const Core* const core = Core::Get();
         Scene* scene = core->GetScene();
-        //Flower* const flower = scene->GetRandFlower();
-        //Flower* const flower = scene->GetHighestNectarFlower();
-        //m_flowerPosition = flower->GetPosition();
     }
 
     void FlyingInsect::SeekingNectar()
@@ -89,7 +87,7 @@ namespace scene
 
             float timeStep = utils::Timers::GetFrameTime();
 
-            DirectX::XMVECTOR leavePos = DirectX::XMVECTOR{ DirectX::XMScalarSin(m_thetaPos) * RadiusToBoundary, 3.0f, DirectX::XMScalarCos(m_thetaPos) * RadiusToBoundary };
+            DirectX::XMVECTOR leavePos = DirectX::XMVECTOR{ DirectX::XMScalarSin(m_radiusPos) * RadiusToBoundary, 3.0f, DirectX::XMScalarCos(m_radiusPos) * RadiusToBoundary };
 
             DirectX::XMVECTOR directionToExitPoint = DirectX::XMVectorSubtract(leavePos, m_position);
             DirectX::XMVECTOR distanceToExitPointVec = DirectX::XMVector3LengthEst(directionToExitPoint);

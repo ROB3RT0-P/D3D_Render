@@ -10,6 +10,7 @@ namespace scene
 		void Initialise();
 		void Update();
 		void AdjustYRotation(float rotAmount);
+		void AdjustXRotation(float rotAmount);
 		void AdjustHeight(float adjustedHeight);
 
 	private:
@@ -18,5 +19,6 @@ namespace scene
 		DirectX::XMVECTOR m_up;
 		DirectX::XMVECTORF32 m_origin;
 		float m_yAngle;
+		float m_xAngle;
 	};
 }

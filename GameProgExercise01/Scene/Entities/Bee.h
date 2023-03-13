@@ -33,7 +33,5 @@ namespace scene
         static const float RadiusToBoundary;
         static const float WaspDangerDistance;
         static const float FlowerCollisionDist;
-
-        float m_thetaPos;
     };
 }

@@ -54,6 +54,6 @@ namespace scene
         static const float WaspSafeDistance;
         
         static const float RadiusToBoundary;
-        float m_thetaPos; // Position of what?
+        float m_radiusPos;
     };
 }
