@@ -15,8 +15,6 @@ namespace scene
 
         void Ground::Initialise()
         {
-        
-
             Entity::Initialise();
             SetScale(m_scale);
             Core* const core = Core::Get();
@@ -46,8 +44,7 @@ namespace scene
             bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
             bufferDesc.StructureByteStride = sizeof( Vertex );
 
-            hr = device->CreateBuffer(&bufferDesc, &initialData,
-                &m_vertexBuffer);
+            hr = device->CreateBuffer(&bufferDesc, &initialData, &m_vertexBuffer);
             ASSERT_HANDLE(hr);
         }
 

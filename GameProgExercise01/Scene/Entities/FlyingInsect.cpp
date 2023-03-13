@@ -26,7 +26,6 @@ namespace scene
         m_outOfBounds(false),
         m_speed( 0.0f )
     {
-    
     }
 
     FlyingInsect::~FlyingInsect()
