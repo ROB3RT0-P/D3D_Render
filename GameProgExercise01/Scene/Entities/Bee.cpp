@@ -9,7 +9,7 @@ using namespace DirectX;
 
 namespace scene
 {
-    const float Bee::RadiusToBoundary = 15.0f;
+    
     const float Bee::WaspDangerDistance = 2.0f;
     const float Bee::FlowerCollisionDist = 0.2f;
 

@@ -10,12 +10,12 @@ using namespace DirectX;
 
 namespace scene
 {
-    const float FlyingInsect::RadiusToBoundary = 15.0f;
-    const float FlyingInsect::LerpRate = 0.75f;
+    const float FlyingInsect::RadiusToBoundary = 10.0f;
+    const float FlyingInsect::LerpRate = 0.9f;
     const float FlyingInsect::FlowerCollisionDist = 0.2f;
     const float FlyingInsect::ExitCollisionDist = 0.1f;
     const float FlyingInsect::WaspSafeDistance = 10.0f;
-    const float FlyingInsect::MaxSpeed = 0.1f;
+    const float FlyingInsect::MaxSpeed = 0.4f;
 
     float lerpSpeed = 10.0f; // Make this a static const member - call Max if that's what it is
     // or make local?
@@ -40,7 +40,6 @@ namespace scene
         m_radiusPos = static_cast<float>((utils::Rand() % 10000) / 10000.0f) * DirectX::XM_2PI; // Gives float 0.0 - 1.0f
         m_speed = static_cast<float>((utils::Rand() % 10000) / 10000.0f); // Gives float 0.0 - 1.0f
         m_speed *= MaxSpeed;
-        
     }
 
     void FlyingInsect::SeekingNectar()
@@ -53,21 +52,8 @@ namespace scene
 
         if (!m_nectar)
         {
-            // Calculate velocity to flower
-            DirectX::XMVECTOR direction = DirectX::XMVectorSubtract(m_flowerPosition, m_position);
-            DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(direction);
-            DirectX::XMVECTOR flowerVelocity = DirectX::XMVectorScale(normalisedDir, m_speed);
+            float distanceAsFloat = PosUpdate(m_flowerPosition);
 
-            DirectX::XMVECTORF32 newPos = DirectX::XMVECTORF32{ 0.0f, 0.0f, 0.0f };
-
-            DirectX::XMVECTOR lerpDir = DirectX::XMVectorLerp(m_orientationAsVector, direction, LerpRate * timeStep);
-            SetOrientation(lerpDir);
-            SetPosition(m_position + (DirectX::XMVectorScale(lerpDir, m_speed)));
-
-            // Check for bee flower collision
-            DirectX::XMVECTOR checkPos = m_position - m_flowerPosition;
-            DirectX::XMVECTOR checkPosLen = DirectX::XMVector3LengthEst(checkPos);
-            float distanceAsFloat = *checkPosLen.m128_f32;
             if ( distanceAsFloat < FlowerCollisionDist )
             {
                 m_nectar = true;
@@ -84,14 +70,7 @@ namespace scene
         if (m_nectar) 
         {
             DirectX::XMVECTOR leavePos = DirectX::XMVECTOR{ DirectX::XMScalarSin(m_radiusPos) * RadiusToBoundary, 3.0f, DirectX::XMScalarCos(m_radiusPos) * RadiusToBoundary };
-
-            DirectX::XMVECTOR directionToExitPoint = DirectX::XMVectorSubtract(leavePos, m_position);
-            DirectX::XMVECTOR distanceToExitPointVec = DirectX::XMVector3LengthEst(directionToExitPoint);
-            float distanceToExitPoint = *distanceToExitPointVec.m128_f32;
-            DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(directionToExitPoint);
-
-            SetPosition(m_position + (DirectX::XMVectorScale(normalisedDir, m_speed)));
-
+            float distanceToExitPoint = PosUpdate(leavePos);
             if ( distanceToExitPoint <= ExitCollisionDist )
             {
                 m_outOfBounds = true;
@@ -124,6 +103,21 @@ namespace scene
         {
             FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingNectar;
         }
+    }
+
+    float FlyingInsect::PosUpdate(DirectX::XMVECTOR trajectory)
+    {
+        float timeStep = utils::Timers::GetFrameTime();
+        DirectX::XMVECTOR direction = DirectX::XMVectorSubtract(trajectory, m_position);
+        DirectX::XMVECTOR normalisedDir = DirectX::XMVector3Normalize(direction);
+        DirectX::XMVECTOR lerpDir = DirectX::XMVectorLerp(m_orientationAsVector, normalisedDir, LerpRate * timeStep);
+        SetPosition(m_position + (DirectX::XMVectorScale(lerpDir, m_speed)));
+        SetOrientation(lerpDir);
+
+        DirectX::XMVECTOR distanceToExitPointVec = DirectX::XMVector3LengthEst(direction);
+        float distance = *distanceToExitPointVec.m128_f32;
+
+        return distance;
     }
 
     void FlyingInsect::Update()

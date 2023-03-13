@@ -30,7 +30,6 @@ namespace scene
         bool m_nectar;
 
         static const UINT NumVertices = 21;
-        static const float RadiusToBoundary;
         static const float WaspDangerDistance;
         static const float FlowerCollisionDist;
     };

@@ -21,6 +21,7 @@ namespace scene
         void SeekingNectar();
         void SeekingHome();
         void AvoidingWasp();
+        float PosUpdate(DirectX::XMVECTOR trajectory);
 
 
     protected: 
@@ -33,11 +34,11 @@ namespace scene
         
         FIMovement            m_fIState; //member_flying_Insect_State
         UINT                  m_padding[3];
-    
+
+        static const float RadiusToBoundary;
     private:
         virtual void OnDeviceLost() {}
         virtual void OnDeviceRestored() {}
-
         
         DirectX::XMVECTOR m_flowerPosition;
         DirectX::XMVECTOR m_waspPosition;
@@ -54,7 +55,7 @@ namespace scene
         static const float ExitCollisionDist;
         static const float WaspSafeDistance;
         static const float MaxSpeed;
-        static const float RadiusToBoundary;
+
         float m_radiusPos;
     };
 }
