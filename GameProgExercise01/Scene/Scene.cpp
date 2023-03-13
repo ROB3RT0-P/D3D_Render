@@ -16,20 +16,21 @@ using namespace DirectX;
 
 namespace scene
 {
+	const int Scene::SpawnMax = 10;
+	const float Scene::TimerMax = 40.0f;
+	const float Scene::TimerCheck = 0.1f;
+
 	Scene::Scene() :
 		m_ground(nullptr),
 		m_camera(nullptr),
 		m_beeTimer( 0.0f ),
-		m_waspTimer( 0.0f ),
-		m_beeTimerReset( 0.0f ),
-		m_waspTimerReset( 0.0f )
+		m_waspTimer( 15.0f ),
+		m_beeTimerReset( 5.0f ),
+		m_waspTimerReset( 15.0f ),
+		m_spawnAmount ( 2 )
 	{
 		m_ground = new Ground();
 		m_camera = new Camera();
-		m_beeTimer = 5.0f;
-		m_waspTimer = 15.0f;
-		m_beeTimerReset = 5.0f;
-		m_waspTimerReset = 15.0f;
 	}
 
 	Scene::~Scene()
@@ -38,36 +39,32 @@ namespace scene
 		delete m_camera;
 	}
 
-	void Scene::AdjustBeeNum(int AdjustedBeeNum)
+	void Scene::AdjustSpawnAmount(int adjustedBeeNum)
 	{
-		float timeStep = utils::Timers::GetFrameTime();
-		m_beeNum = AdjustedBeeNum;
+		m_spawnAmount = adjustedBeeNum;
 		
 		// Correct BeeNum if it goes too low or too high.
-		if (m_beeNum <= 0)
+		if (m_spawnAmount <= 0)
 		{
-			m_beeNum = 1;
+			m_spawnAmount = 1;
 		}
-		else if (m_beeNum > 10)
+		else if (m_spawnAmount > SpawnMax)
 		{
-			m_beeNum = 10;
+			m_spawnAmount = 10;
 		}
 	}
 
-	// TODO - BeeNum m_beeNum
-	void Scene::AdjustBeeTimer(int AdjustedBeeNum)
+	void Scene::AdjustBeeTimer(float adjustedBeeTimer)
 	{
-		float timeStep = utils::Timers::GetFrameTime();
-		m_beeTimer = AdjustedBeeNum;
+		m_beeTimerReset = adjustedBeeTimer;
 
-		// Correct BeeNum if it goes too low or too high.
-		if (m_beeTimer <= 0)
+		if (m_beeTimerReset <= 0)
 		{
-			m_beeTimer = 1.0f;
+			m_beeTimerReset = 1.0f;
 		}
-		else if (m_beeTimer > 40.0f)
+		else if (m_beeTimerReset > TimerMax)
 		{
-			m_beeTimer = 40.0f;
+			m_beeTimerReset = 40.0f;
 		}
 	}
 
@@ -129,7 +126,7 @@ namespace scene
 
 	void Scene::Update()
 	{
-		float timeStep = utils::Timers::GetFrameTime();
+		const float timeStep = utils::Timers::GetFrameTime();
 
 		m_ground->Update();
 		m_camera->Update();
@@ -190,21 +187,20 @@ namespace scene
 		}
 
 		m_beeTimer -= timeStep;
-		m_waspTimer -= timeStep;
-
-		if (m_beeTimer < 0.2f)
+		if (m_beeTimer < TimerCheck)
 		{
-			for (int i = 0; i <= m_beeNum; ++i)
+			for (UINT i = 0; i < m_spawnAmount; ++i)
 			{
 				// Spawn a new bee
 				Bee* bee = new Bee();
 				bee->Initialise();
 				m_beeList.push_back(bee);
-				m_beeTimer = m_beeTimerReset;
 			}
+			m_beeTimer = m_beeTimerReset;
 		}
 
-		if (m_waspTimer < 0.1f)
+		m_waspTimer -= timeStep;
+		if (m_waspTimer < TimerCheck)
 		{
 			// Spawn a new wasp.
 			Wasp* wasp = new Wasp();

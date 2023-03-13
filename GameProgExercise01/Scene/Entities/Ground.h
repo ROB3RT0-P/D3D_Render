@@ -10,6 +10,10 @@ namespace scene
     class Ground  final : public Entity
     {
     public:
+
+        Ground();
+        ~Ground();
+
         static const UINT NumVertices = 6;
 
         virtual void Render() override;
@@ -18,6 +22,8 @@ namespace scene
     private:
         virtual void OnDeviceLost() {}
         virtual void OnDeviceRestored() {}
+
+        float             m_scale;
     };
 
 }

@@ -12,17 +12,19 @@ namespace scene
 {
     const float FlyingInsect::RadiusToBoundary = 15.0f;
     const float FlyingInsect::LerpRate = 0.75f;
-    static const float MaxSpeed = 0.1f;
     const float FlyingInsect::FlowerCollisionDist = 0.2f;
     const float FlyingInsect::ExitCollisionDist = 0.1f;
     const float FlyingInsect::WaspSafeDistance = 10.0f;
+    const float FlyingInsect::MaxSpeed = 0.1f;
 
-    float lerpSpeed = 10.0f;
+    float lerpSpeed = 10.0f; // Make this a static const member - call Max if that's what it is
+    // or make local?
 
     FlyingInsect::FlyingInsect() :
         m_fIState( FIMovement::SeekingNectar ),
         m_nectar(false),
-        m_outOfBounds(false)
+        m_outOfBounds(false),
+        m_speed( 0.0f )
     {
     
     }
@@ -35,13 +37,10 @@ namespace scene
     {
         Entity::Initialise();
 
-        m_radiusPos = static_cast<float>((utils::Rand() % 10000) / 10000.0f) * DirectX::XM_2PI;; // Gives float 0.0 - 1.0f
+        m_radiusPos = static_cast<float>((utils::Rand() % 10000) / 10000.0f) * DirectX::XM_2PI; // Gives float 0.0 - 1.0f
         m_speed = static_cast<float>((utils::Rand() % 10000) / 10000.0f); // Gives float 0.0 - 1.0f
         m_speed *= MaxSpeed;
         
-        // Get position of a rand flower.
-        const Core* const core = Core::Get();
-        Scene* scene = core->GetScene();
     }
 
     void FlyingInsect::SeekingNectar()
@@ -84,9 +83,6 @@ namespace scene
     {
         if (m_nectar) 
         {
-
-            float timeStep = utils::Timers::GetFrameTime();
-
             DirectX::XMVECTOR leavePos = DirectX::XMVECTOR{ DirectX::XMScalarSin(m_radiusPos) * RadiusToBoundary, 3.0f, DirectX::XMScalarCos(m_radiusPos) * RadiusToBoundary };
 
             DirectX::XMVECTOR directionToExitPoint = DirectX::XMVectorSubtract(leavePos, m_position);

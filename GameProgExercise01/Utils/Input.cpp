@@ -54,7 +54,7 @@ void Input::Update()
 	}
 	camera->AdjustHeight(height);
 
-	int numberOfBees = scene->GetBeeNum();
+	int numberOfBees = scene->GetSpawnAmount();
 	if (kb.A)
 	{
 			numberOfBees += 1;
@@ -63,9 +63,9 @@ void Input::Update()
 	{
 			numberOfBees -= 1;
 	}
-	scene->AdjustBeeNum( numberOfBees );
+	scene->AdjustSpawnAmount( numberOfBees ); // TODO rename
 
-	int beeTimer = scene->GetBeeTimer();
+	float beeTimer = scene->GetBeeTimer();
 	if (kb.W)
 	{
 		beeTimer += 1;

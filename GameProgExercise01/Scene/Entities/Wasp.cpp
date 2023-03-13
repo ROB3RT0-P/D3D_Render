@@ -7,11 +7,11 @@
 namespace scene
 {
     Wasp::Wasp() :
-        m_outOfBounds(false)
+        m_outOfBounds( false ),
+        m_scale( 0.2f ),
+        m_maxSpeed( 1.0f )
     {
         FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingNectar;
-        m_maxSpeed = 1.0f;
-        m_scale = 0.2f;
     }
 
     Wasp::~Wasp()

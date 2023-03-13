@@ -17,6 +17,9 @@ namespace scene
 	{
 	public:
 		static const UINT FlowerGridSize = 4;
+		static const int SpawnMax;
+		static const float TimerMax;
+		static const float TimerCheck; // Check if timer is below certain amount.
 
 		Scene();
 		~Scene();
@@ -25,8 +28,8 @@ namespace scene
 		void				Shutdown();
 		void				Update();
 		void				Render();
-		void				AdjustBeeNum( int AdjustedBeeNum );
-		void				AdjustBeeTimer( int AdjutedBeeTimer);
+		void				AdjustSpawnAmount( int adjustedBeeNum );
+		void				AdjustBeeTimer( float adjutedBeeTimer);
 
 		Flower*				GetRandFlower();
 		Wasp*				GetWaspClosestToEntity( const Entity* const entity );
@@ -39,14 +42,14 @@ namespace scene
 			return m_camera;
 		}
 
-		int				GetBeeNum()
+		int				GetSpawnAmount()
 		{
-			return m_beeNum;
+			return m_spawnAmount;
 		}
 
 		float				GetBeeTimer()
 		{
-			return m_beeTimer;
+			return m_beeTimerReset;
 		}
 
 	private:
@@ -54,7 +57,8 @@ namespace scene
 		float				m_beeTimer;
 		float				m_beeTimerReset;
 		float				m_waspTimerReset;
-		UINT				m_beeNum = 1;
+		UINT				m_spawnAmount;
+
 		Ground*				m_ground;
 		Camera*				m_camera;
 

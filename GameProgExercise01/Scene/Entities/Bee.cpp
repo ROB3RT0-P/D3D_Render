@@ -32,6 +32,7 @@ namespace scene
 
         FlyingInsect::m_fIState = FlyingInsect::FIMovement::SeekingNectar;
 
+        // Calculate a random start position around the origin using the radius.
         float thetaPos = static_cast<float>((utils::Rand() % 10000) / 10000.0f); // Gives float 0.0 - 1.0f
         float radiusPos = thetaPos * XM_2PI;
         DirectX::XMVECTOR startPos = DirectX::XMVECTOR{ XMScalarSin(radiusPos) * RadiusToBoundary, 3.0f, XMScalarCos(radiusPos) * RadiusToBoundary };
