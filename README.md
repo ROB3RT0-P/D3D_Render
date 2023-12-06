@@ -1,4 +1,4 @@
-# D3D Render - Bee Simulation
+# D3D Render
 
 Copyright (c) Robert Parry - 2023
 
